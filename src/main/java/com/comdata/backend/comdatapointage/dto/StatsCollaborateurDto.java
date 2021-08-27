@@ -12,7 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatsCollaborateurDto {
-
+    private String collaborateurMatricule;
+    private String collaborateurFullName;
     private StatsParamsDto statsActif;
     private StatsParamsDto statsInactif;
     private StatsParamsDto statsPause;

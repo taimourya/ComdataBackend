@@ -19,6 +19,7 @@ public class Activiter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nom;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date_creation;
     private boolean isActive;
 

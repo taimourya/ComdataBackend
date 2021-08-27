@@ -22,7 +22,9 @@ public class User {
     private String cin;
     private String adresse;
     private String passwd;
+    @Temporal(TemporalType.DATE)
     private Date date_naissance;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date_creation;
     private boolean isActive;
 
