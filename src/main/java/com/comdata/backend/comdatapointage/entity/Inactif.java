@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import java.time.LocalTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -12,4 +14,9 @@ import javax.persistence.ManyToOne;
 public class Inactif extends Temps{
     @ManyToOne
     private Collaborateur collaborateur;
+
+    public Inactif(Integer id, Date date, LocalTime heur_debut, LocalTime heur_fin, Collaborateur collaborateur) {
+        super(id, date, heur_debut, heur_fin);
+        this.collaborateur = collaborateur;
+    }
 }

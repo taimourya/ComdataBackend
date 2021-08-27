@@ -28,6 +28,6 @@ public class Activiter {
     @OneToMany(mappedBy = "activiter")
     private List<Collaborateur> collaborateurs = new ArrayList<>();
 
-    @OneToOne(mappedBy = "activiter")
-    private Superviseur superviseur;
+    @OneToMany(mappedBy = "activiter")
+    private List<Superviseur> superviseurs = new ArrayList<>();
 }

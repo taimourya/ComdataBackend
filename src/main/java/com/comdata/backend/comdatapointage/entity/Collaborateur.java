@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -26,4 +27,9 @@ public class Collaborateur extends User {
 
     @OneToMany(mappedBy = "collaborateur")
     private List<Inactif> tmpInactivites = new ArrayList<>();
+
+    public Collaborateur(String matricule, String firstname, String lastname, String email, String phone, String cin, String adresse, String passwd, Date date_naissance, Date date_creation, boolean isActive, Activiter activiter) {
+        super(matricule, firstname, lastname, email, phone, cin, adresse, passwd, date_naissance, date_creation, isActive);
+        this.activiter = activiter;
+    }
 }
