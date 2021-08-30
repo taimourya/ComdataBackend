@@ -1,5 +1,6 @@
 package com.comdata.backend.comdatapointage;
 
+import com.comdata.backend.comdatapointage.dao.CollaborateurRepository;
 import com.comdata.backend.comdatapointage.dto.*;
 import com.comdata.backend.comdatapointage.entity.*;
 import com.comdata.backend.comdatapointage.service.DtoParser;
@@ -10,14 +11,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
 @SpringBootTest
 public class DtoTest {
 
     @Autowired
     private DtoParser dtoParser;
-
     @Test
     public void dtoAdminParserTest() {
         Admin admin = new Admin(
@@ -180,6 +182,56 @@ public class DtoTest {
         Assertions.assertEquals(pause.getHeur_debut(), pauseDto.getHeur_debut());
         Assertions.assertEquals(pause.getHeur_fin(), pauseDto.getHeur_fin());
         Assertions.assertEquals("cafe", pauseDto.getType());
+    }
+
+    @Test
+    public void dtoCollaborateurTempsActivitesTest() {
+
+        /*Collaborateur c = collaborateurRepository.findById("matcolcol1UBER").get();
+
+        System.out.println("total : " + c.getFirstname());
+        CollaborateurTempsDto collaborateurTempsDtot = dtoParser.toCollaborateurTempsActivitesDto(c);
+        System.out.println("total : " + collaborateurTempsDtot.getTotal());*/
+
+        Collaborateur collaborateur = new Collaborateur(
+                "mat1", "yahya", "taimourya",
+                "email", "phone", "cin", "adresse",
+                "passwd", new Date(), new Date(), true,
+                new Activiter(
+                        1, "activiter1", new Date(), true, new Parametrage(1, 2, 3, null),
+                        null, null
+                )
+        );
+
+
+        collaborateur.getTmpActivies().add(
+                new Actif(1, new Date(),
+                        LocalTime.of(10, 00, 0),
+                        LocalTime.of(14, 30, 0),
+                        collaborateur
+                )
+        );
+        collaborateur.getTmpActivies().add(
+                new Actif(1, new Date(),
+                        LocalTime.of(10, 00, 0),
+                        LocalTime.of(15, 45, 0),
+                        collaborateur
+                )
+        );
+
+        collaborateur.getTmpActivies().add(
+                new Actif(1, new Date(),
+                        LocalTime.of(10, 00, 0),
+                        LocalTime.of(18, 00, 0),
+                        collaborateur
+                )
+        );
+
+        CollaborateurTempsDto collaborateurTempsDto = dtoParser.toCollaborateurTempsActivitesDto(collaborateur);
+
+        Assertions.assertEquals(18.25, collaborateurTempsDto.getTotal());
+
+        Assertions.assertEquals(3, collaborateurTempsDto.getListTemps().size());
 
     }
 

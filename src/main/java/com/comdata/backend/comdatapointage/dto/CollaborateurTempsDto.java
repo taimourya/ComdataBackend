@@ -5,13 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class CollaborateurTempsDto extends UserDto{
 
-    private List<TempsDto> listTemps;
-    private LocalTime total;
+    private String collaborateur_fullname;
+    private List<TempsDto> listTemps = new ArrayList<>();
+    private double total;
 
 }

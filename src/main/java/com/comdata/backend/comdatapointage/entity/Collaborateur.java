@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Collaborateur extends User {
     @OneToMany(mappedBy = "collaborateur")
     private List<Pause> pauses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "collaborateur")
+    @OneToMany(mappedBy = "collaborateur", fetch = FetchType.EAGER)
     private List<Actif> tmpActivies = new ArrayList<>();
 
     @OneToMany(mappedBy = "collaborateur")

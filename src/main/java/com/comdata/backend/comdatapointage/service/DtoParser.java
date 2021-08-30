@@ -2,14 +2,19 @@ package com.comdata.backend.comdatapointage.service;
 
 import com.comdata.backend.comdatapointage.dto.*;
 import com.comdata.backend.comdatapointage.entity.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.time.LocalTime;
 import java.time.temporal.Temporal;
 
 @Service
 public class DtoParser {
+
+    @Autowired
+    private TimeCalculator timeCalculator;
 
     public UserDto toUserDto(User user) {
         UserDto userDto = new UserDto();
@@ -106,35 +111,27 @@ public class DtoParser {
     @Transactional
     public CollaborateurTempsDto toCollaborateurTempsActivitesDto(Collaborateur collaborateur) {
         CollaborateurTempsDto collaborateurTempsDto = new CollaborateurTempsDto();
+        collaborateurTempsDto.setCollaborateur_fullname(collaborateur.getFirstname() + " " + collaborateur.getLastname());
+        collaborateurTempsDto.setTotal(0);
         for(Actif actif : collaborateur.getTmpActivies()) {
             collaborateurTempsDto.getListTemps().add(toTempsDto(actif));
 
-            LocalTime time = actif.getHeur_fin();
-            time.minusHours(actif.getHeur_debut().getHour());
-            time.minusMinutes(actif.getHeur_debut().getMinute());
-            time.minusSeconds(actif.getHeur_debut().getSecond());
+            double difference = timeCalculator.difference(actif.getHeur_debut(), actif.getHeur_fin());
+            collaborateurTempsDto.setTotal(collaborateurTempsDto.getTotal() + difference);
 
-            collaborateurTempsDto.getTotal().plusHours(time.getHour());
-            collaborateurTempsDto.getTotal().plusMinutes(time.getMinute());
-            collaborateurTempsDto.getTotal().plusSeconds(time.getSecond());
         }
         return collaborateurTempsDto;
     }
     @Transactional
     public CollaborateurTempsDto toCollaborateurTempsInactivitesDto(Collaborateur collaborateur) {
         CollaborateurTempsDto collaborateurTempsDto = new CollaborateurTempsDto();
-        collaborateurTempsDto.setTotal(LocalTime.of(0,0));
+        collaborateurTempsDto.setCollaborateur_fullname(collaborateur.getFirstname() + " " + collaborateur.getLastname());
+        collaborateurTempsDto.setTotal(0);
         for(Inactif inactif : collaborateur.getTmpInactivites()) {
             collaborateurTempsDto.getListTemps().add(toTempsDto(inactif));
 
-            LocalTime time = inactif.getHeur_fin();
-            time.minusHours(inactif.getHeur_debut().getHour());
-            time.minusMinutes(inactif.getHeur_debut().getMinute());
-            time.minusSeconds(inactif.getHeur_debut().getSecond());
-
-            collaborateurTempsDto.getTotal().plusHours(time.getHour());
-            collaborateurTempsDto.getTotal().plusMinutes(time.getMinute());
-            collaborateurTempsDto.getTotal().plusSeconds(time.getSecond());
+            double difference = timeCalculator.difference(inactif.getHeur_debut(), inactif.getHeur_fin());
+            collaborateurTempsDto.setTotal(collaborateurTempsDto.getTotal() + difference);
 
         }
         return collaborateurTempsDto;
@@ -142,17 +139,12 @@ public class DtoParser {
     @Transactional
     public CollaborateurTempsDto toCollaborateurTempsPauseDto(Collaborateur collaborateur) {
         CollaborateurTempsDto collaborateurTempsDto = new CollaborateurTempsDto();
+        collaborateurTempsDto.setCollaborateur_fullname(collaborateur.getFirstname() + " " + collaborateur.getLastname());
+        collaborateurTempsDto.setTotal(0);
         for(Pause pause : collaborateur.getPauses()) {
             collaborateurTempsDto.getListTemps().add(toTempsDto(pause));
-
-            LocalTime time = pause.getHeur_fin();
-            time.minusHours(pause.getHeur_debut().getHour());
-            time.minusMinutes(pause.getHeur_debut().getMinute());
-            time.minusSeconds(pause.getHeur_debut().getSecond());
-
-            collaborateurTempsDto.getTotal().plusHours(time.getHour());
-            collaborateurTempsDto.getTotal().plusMinutes(time.getMinute());
-            collaborateurTempsDto.getTotal().plusSeconds(time.getSecond());
+            double difference = timeCalculator.difference(pause.getHeur_debut(), pause.getHeur_fin());
+            collaborateurTempsDto.setTotal(collaborateurTempsDto.getTotal() + difference);
         }
         return collaborateurTempsDto;
     }
