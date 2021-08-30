@@ -11,7 +11,7 @@ import java.util.List;
 public interface IUserService {
 
     UserDto consulterUser(String matricule) throws Exception;
-    
+
     //mc => filtrer par mot cle
     //filterEtatCmpt => all, activer, desactiver
     PageDto<UserDto> consulterUsers(String mc, String filterEtatCmpt, int page, int size);

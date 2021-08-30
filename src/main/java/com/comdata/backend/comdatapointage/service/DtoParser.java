@@ -3,12 +3,14 @@ package com.comdata.backend.comdatapointage.service;
 import com.comdata.backend.comdatapointage.dto.*;
 import com.comdata.backend.comdatapointage.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
 import java.time.LocalTime;
 import java.time.temporal.Temporal;
+import java.util.List;
 
 @Service
 public class DtoParser {
@@ -148,5 +150,15 @@ public class DtoParser {
             collaborateurTempsDto.setTotal(collaborateurTempsDto.getTotal() + difference);
         }
         return collaborateurTempsDto;
+    }
+
+    public <T> PageDto<T> toPageDto(Page<T> pageList, int page) {
+        PageDto<T> pageDtoResult = new PageDto<>();
+        pageDtoResult.setTotalPage(pageList.getTotalPages());
+        pageDtoResult.setPage(page);
+        pageDtoResult.setSize(pageList.getSize());
+        pageDtoResult.setContent(pageList.getContent());
+
+        return pageDtoResult;
     }
 }

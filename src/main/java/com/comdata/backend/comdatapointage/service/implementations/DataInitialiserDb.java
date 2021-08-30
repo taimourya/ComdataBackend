@@ -26,16 +26,18 @@ public class DataInitialiserDb implements IDataInitialiser {
 
         Stream.of("UBER","ORANGE","COMDATA","TEST").forEach(e -> {
 
+            Parametrage parametrage = new Parametrage(
+                    null, 10000, 10000, null
+            );
+            parametrage = parametrageRepository.save(parametrage);
+
             Activiter activiter = new Activiter(
                     null, e,new Date(), true,
-                    null, null, null
+                    parametrage, null, null
             );
             activiter = activiterRepository.save(activiter);
 
-            Parametrage parametrage = new Parametrage(
-                    null, 10000, 10000, activiter
-            );
-            parametrageRepository.save(parametrage);
+
         });
     }
 
