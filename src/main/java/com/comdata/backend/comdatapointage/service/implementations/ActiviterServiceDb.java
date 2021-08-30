@@ -9,6 +9,7 @@ import com.comdata.backend.comdatapointage.entity.Parametrage;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
 import com.comdata.backend.comdatapointage.service.DtoParser;
 import com.comdata.backend.comdatapointage.service.interfaces.IActiviterService;
+import com.comdata.backend.comdatapointage.service.interfaces.IGetterIdService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,21 +21,16 @@ import java.util.Optional;
 @Service
 public class ActiviterServiceDb implements IActiviterService {
 
+    @Autowired private IGetterIdService getterIdService;
     @Autowired private DtoParser dtoParser;
     @Autowired private ActiviterRepository activiterRepository;
     @Autowired private ParametrageRepository parametrageRepository;
 
-    private Activiter consulterActiviterAct(Integer id) throws Exception {
-        Optional<Activiter> optional = activiterRepository.findById(id);
-        if(optional.isPresent()) {
-            return optional.get();
-        }
-        throw new Exception("Activiter not found");
-    }
+
 
     @Override
     public ActiviterDto consulterActiviter(Integer id) throws Exception {
-        Activiter activiter = consulterActiviterAct(id);
+        Activiter activiter = getterIdService.getActiviter(id);
         return dtoParser.toActiviterDto(activiter);
     }
 
@@ -72,7 +68,7 @@ public class ActiviterServiceDb implements IActiviterService {
 
     @Override
     public ActiviterDto editActiviter(Integer id, ActiviterRequest request) throws Exception {
-        Activiter activiter = consulterActiviterAct(id);
+        Activiter activiter = getterIdService.getActiviter(id);
         Parametrage parametrage = activiter.getParametrage();
         parametrage.setTFermetureSessionMs(request.getTFermetureSessionMs());
         parametrage.setTInactiviteMs(request.getTInactiviteMs());
@@ -91,14 +87,14 @@ public class ActiviterServiceDb implements IActiviterService {
 
     @Override
     public void enableActiviter(Integer id) throws Exception {
-        Activiter activiter = consulterActiviterAct(id);
+        Activiter activiter = getterIdService.getActiviter(id);
         activiter.setActive(true);
         activiterRepository.save(activiter);
     }
 
     @Override
     public void disableActiviter(Integer id) throws Exception {
-        Activiter activiter = consulterActiviterAct(id);
+        Activiter activiter = getterIdService.getActiviter(id);
         activiter.setActive(false);
         activiterRepository.save(activiter);
     }

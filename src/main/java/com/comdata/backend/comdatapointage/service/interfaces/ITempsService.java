@@ -12,4 +12,5 @@ public interface ITempsService {
 
     CollaborateurAllTempsDto consulterAllTempsCollaborateur(String matricule);
 
+
 }
