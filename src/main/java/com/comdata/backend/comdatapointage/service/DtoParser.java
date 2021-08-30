@@ -136,6 +136,7 @@ public class DtoParser {
         }
         return collaborateurTempsDto;
     }
+
     @Transactional
     public CollaborateurTempsDto toCollaborateurTempsPauseDto(Collaborateur collaborateur) {
         CollaborateurTempsDto collaborateurTempsDto = new CollaborateurTempsDto();
