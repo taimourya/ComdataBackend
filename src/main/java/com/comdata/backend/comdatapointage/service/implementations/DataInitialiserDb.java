@@ -4,6 +4,7 @@ import com.comdata.backend.comdatapointage.dao.*;
 import com.comdata.backend.comdatapointage.entity.*;
 import com.comdata.backend.comdatapointage.service.interfaces.IDataInitialiser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -15,6 +16,7 @@ import java.util.stream.Stream;
 @Service
 public class DataInitialiserDb implements IDataInitialiser {
 
+    @Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired private UserRepository userRepository;
     @Autowired private TempsRepository tempsRepository;
     @Autowired private ActiviterRepository activiterRepository;
@@ -54,7 +56,8 @@ public class DataInitialiserDb implements IDataInitialiser {
         Stream.of("admin", "yahya", "amine").forEach(e -> {
             Admin admin = new Admin(
               "matadmin"+e, e, e, e+"@gmail.com", "0643334135",
-              "BE"+e, "adresse "+e, e, new Date(), new Date(), true
+              "BE"+e, "adresse "+e, bCryptPasswordEncoder.encode("123"),
+                    new Date(), new Date(), true
             );
             userRepository.save(admin);
         });
@@ -66,7 +69,8 @@ public class DataInitialiserDb implements IDataInitialiser {
             Stream.of("sup1"+a.getNom(), "sup2"+a.getNom(), "sup3"+a.getNom()).forEach(e -> {
                 Superviseur s = new Superviseur(
                         "matsup"+e, e, e, e+"@gmail.com", "0643334135",
-                        "BE"+e, "adresse "+e, e, new Date(), new Date(), true, a
+                        "BE"+e, "adresse "+e, bCryptPasswordEncoder.encode("123"),
+                        new Date(), new Date(), true, a
                 );
                 userRepository.save(s);
             });
@@ -80,7 +84,8 @@ public class DataInitialiserDb implements IDataInitialiser {
             Stream.of("col1"+a.getNom(), "col2"+a.getNom(), "col3"+a.getNom()).forEach(e -> {
                 Collaborateur c = new Collaborateur(
                         "matcol"+e, e, e, e+"@gmail.com", "0643334135",
-                        "BE"+e, "adresse "+e, e, new Date(), new Date(), true, a
+                        "BE"+e, "adresse "+e, bCryptPasswordEncoder.encode("123"),
+                        new Date(), new Date(), true, a
                 );
                 c = userRepository.save(c);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

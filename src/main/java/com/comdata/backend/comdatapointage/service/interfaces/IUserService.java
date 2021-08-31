@@ -3,8 +3,12 @@ package com.comdata.backend.comdatapointage.service.interfaces;
 import com.comdata.backend.comdatapointage.dto.PageDto;
 import com.comdata.backend.comdatapointage.dto.UserDto;
 import com.comdata.backend.comdatapointage.request.UserRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public interface IUserService {
+public interface IUserService extends UserDetailsService {
+
 
     UserDto consulterUser(String matricule) throws Exception;
 

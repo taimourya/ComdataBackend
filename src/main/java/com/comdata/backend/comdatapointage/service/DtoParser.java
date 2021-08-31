@@ -152,7 +152,17 @@ public class DtoParser {
         }
         return collaborateurTempsDto;
     }
-
+    @Transactional
+    public CollaborateurAllTempsDto toCollaborateurAllTempsDtoDto(Collaborateur collaborateur) {
+        CollaborateurAllTempsDto collaborateurAllTempsDto = new CollaborateurAllTempsDto();
+        collaborateurAllTempsDto.setCollaborateur_matricule(collaborateur.getMatricule());
+        collaborateurAllTempsDto.setCollaborateur_fullname(collaborateur.getFirstname() + " " + collaborateur.getLastname());
+        collaborateurAllTempsDto.setActivites(toCollaborateurTempsActivitesDto(collaborateur));
+        collaborateurAllTempsDto.setInactivites(toCollaborateurTempsInactivitesDto(collaborateur));
+        collaborateurAllTempsDto.setPauses(toCollaborateurTempsPauseDto(collaborateur));
+        collaborateurAllTempsDto.setTempsMasse(0);
+        return collaborateurAllTempsDto;
+    }
     public <T> PageDto<T> toPageDto(Page<T> pageList, int page) {
         PageDto<T> pageDtoResult = new PageDto<>();
         pageDtoResult.setTotalPage(pageList.getTotalPages());

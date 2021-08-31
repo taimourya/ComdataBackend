@@ -14,13 +14,22 @@ import com.comdata.backend.comdatapointage.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class UserServiceBd implements IUserService {
 
+    @Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired private IGetterIdService getterIdService;
     @Autowired private DtoParser dtoParser;
     @Autowired private UserRepository userRepository;
@@ -28,6 +37,29 @@ public class UserServiceBd implements IUserService {
     @Autowired private SuperviseurRepository superviseurRepository;
     @Autowired private CollaborateurRepository collaborateurRepository;
 
+
+    @Override
+    public UserDetails loadUserByUsername(String matricule) throws UsernameNotFoundException {
+        Optional<User> optionalUser = userRepository.findById(matricule);
+        if(!optionalUser.isPresent())
+            throw new UsernameNotFoundException(matricule);
+
+        User userEntity = optionalUser.get();
+
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+
+        authorities.add(new SimpleGrantedAuthority("USER"));
+
+        if(userEntity instanceof Admin) {
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        }
+        else if(userEntity instanceof Superviseur)
+            authorities.add(new SimpleGrantedAuthority("SUPERVISEUR"));
+        else if(userEntity instanceof Collaborateur)
+            authorities.add(new SimpleGrantedAuthority("COLLABORATEUR"));
+
+        return new org.springframework.security.core.userdetails.User(userEntity.getCin() , userEntity.getPasswd() , authorities);
+    }
 
     @Override
     public UserDto consulterUser(String matricule) throws Exception {
@@ -185,7 +217,7 @@ public class UserServiceBd implements IUserService {
         user.setAdresse(request.getAdresse());
         user.setCin(request.getCin());
         user.setPhone(request.getPhone());
-        user.setPasswd(request.getPasswd()); //encrypt later
+        user.setPasswd(bCryptPasswordEncoder.encode(request.getPasswd()));
         user.setEmail(request.getEmail());
         user.setDate_naissance(request.getDate_naissance());
         user.setDate_creation(new Date());
@@ -232,7 +264,7 @@ public class UserServiceBd implements IUserService {
         user.setDate_naissance(request.getDate_naissance());
         user.setDate_creation(new Date());
         if(request.getPasswd().length() != 0) {
-            user.setPasswd(request.getPasswd()); //encrypt later
+            user.setPasswd(bCryptPasswordEncoder.encode(request.getPasswd()));
         }
         user = userRepository.save(user);
 
@@ -264,4 +296,5 @@ public class UserServiceBd implements IUserService {
         user.setActive(false);
         userRepository.save(user);
     }
+
 }
