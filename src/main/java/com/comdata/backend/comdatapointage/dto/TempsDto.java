@@ -11,6 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TempsDto {
+    private Integer id;
     private Date date;
     private LocalTime heur_debut;
     private LocalTime heur_fin;

@@ -12,7 +12,7 @@ public class PauseDto extends TempsDto {
     private String type;
 
     public PauseDto(TempsDto tempsDto, String type) {
-        super(tempsDto.getDate(), tempsDto.getHeur_debut(), tempsDto.getHeur_fin());
+        super(tempsDto.getId(), tempsDto.getDate(), tempsDto.getHeur_debut(), tempsDto.getHeur_fin());
         this.type = type;
     }
 }

@@ -40,7 +40,7 @@ public class ActiviterServiceDb implements IActiviterService {
         PageDto<ActiviterDto> pageDto = new PageDto<>();
         pageDto.setPage(page);
         pageDto.setSize(size);
-        pageDto.setSize(pageActiviter.getTotalPages());
+        pageDto.setTotalPage(pageActiviter.getTotalPages());
         for(Activiter activiter : pageActiviter.getContent()) {
             pageDto.getContent().add(dtoParser.toActiviterDto(activiter));
         }

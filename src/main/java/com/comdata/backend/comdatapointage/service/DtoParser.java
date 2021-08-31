@@ -99,6 +99,7 @@ public class DtoParser {
 
     public TempsDto toTempsDto(Temps temps) {
         TempsDto tempsDto = new TempsDto();
+        tempsDto.setId(temps.getId());
         tempsDto.setDate(temps.getDate());
         tempsDto.setHeur_debut(temps.getHeur_debut());
         tempsDto.setHeur_fin(temps.getHeur_fin());
@@ -161,4 +162,12 @@ public class DtoParser {
 
         return pageDtoResult;
     }
+
+    public TypeDto toTypeDto(TypePause type) {
+        TypeDto typeDto = new TypeDto();
+        typeDto.setId(type.getId());
+        typeDto.setLibelle(type.getLibelle());
+        return typeDto;
+    }
+
 }
