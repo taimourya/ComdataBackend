@@ -17,4 +17,6 @@ public class UserRequest {
     private String passwd;
     private String confirmPasswd;
     private Date date_naissance;
+    private String type;
+    private Integer activiter_id;
 }

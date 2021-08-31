@@ -19,6 +19,7 @@ public class User {
     private String lastname;
     private String email;
     private String phone;
+    @Column(unique = true)
     private String cin;
     private String adresse;
     private String passwd;

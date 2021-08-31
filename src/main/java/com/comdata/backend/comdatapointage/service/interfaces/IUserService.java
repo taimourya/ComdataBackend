@@ -2,11 +2,7 @@ package com.comdata.backend.comdatapointage.service.interfaces;
 
 import com.comdata.backend.comdatapointage.dto.PageDto;
 import com.comdata.backend.comdatapointage.dto.UserDto;
-import com.comdata.backend.comdatapointage.request.ColSupRequest;
 import com.comdata.backend.comdatapointage.request.UserRequest;
-import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 public interface IUserService {
 
@@ -20,16 +16,16 @@ public interface IUserService {
     //activiter_id =>  filter par activiter si id = -1 => ALL
     PageDto<UserDto> consulterCollaborateurs(
             String mc, String filterEtatCmpt, String filterSession, Integer activiter_id, int page, int size
-    );
+    ) throws Exception;
 
-    PageDto<UserDto> consulterSuperviseurs(String mc, String filterEtatCmpt, Integer activiter_id, int page, int size);
+    PageDto<UserDto> consulterSuperviseurs(String mc, String filterEtatCmpt, Integer activiter_id, int page, int size) throws Exception;
     PageDto<UserDto> consulterAdmins(String mc, String filterEtatCmpt, int page, int size);
 
-    UserDto addUser(UserRequest request);
-    UserDto editUser(String matricule, UserRequest request);
+    UserDto addUser(UserRequest request) throws Exception;
+    UserDto editUser(String matricule, UserRequest request) throws Exception;
 
-    void enableUser(String matricule);
-    void disableUser(String matricule);
+    void enableUser(String matricule) throws Exception;
+    void disableUser(String matricule) throws Exception;
 
 
 

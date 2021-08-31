@@ -18,6 +18,7 @@ public class Activiter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(unique = true)
     private String nom;
     @Temporal(TemporalType.TIMESTAMP)
     private Date date_creation;

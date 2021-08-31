@@ -69,6 +69,5 @@ public class TypeServiceTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
