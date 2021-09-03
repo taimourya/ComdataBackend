@@ -1,11 +1,15 @@
-package com.comdata.backend.comdatapointage.service.interfaces;
+package com.comdata.backend.comdatapointage.service.implementations;
 
 import com.comdata.backend.comdatapointage.dto.CollaborateurAllTempsDto;
 import com.comdata.backend.comdatapointage.dto.CollaborateurTempsDto;
 import com.comdata.backend.comdatapointage.entity.Collaborateur;
 import com.comdata.backend.comdatapointage.service.DtoParser;
+import com.comdata.backend.comdatapointage.service.interfaces.IGetterIdService;
+import com.comdata.backend.comdatapointage.service.interfaces.ITempsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TempsServiceBd implements ITempsService {
 
     @Autowired private DtoParser dtoParser;

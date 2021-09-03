@@ -12,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Temps {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

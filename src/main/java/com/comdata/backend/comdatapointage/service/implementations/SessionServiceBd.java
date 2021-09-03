@@ -1,6 +1,7 @@
 package com.comdata.backend.comdatapointage.service.implementations;
 
 import com.comdata.backend.comdatapointage.dao.CollaborateurRepository;
+import com.comdata.backend.comdatapointage.dao.PauseRepository;
 import com.comdata.backend.comdatapointage.dao.TempsRepository;
 import com.comdata.backend.comdatapointage.dao.UserRepository;
 import com.comdata.backend.comdatapointage.dto.PauseDto;
@@ -21,18 +22,18 @@ public class SessionServiceBd implements ISessionService {
     @Autowired private DtoParser dtoParser;
     @Autowired private IGetterIdService getterIdService;
     @Autowired private TempsRepository tempsRepository;
+    @Autowired private PauseRepository pauseRepository;
 
 
     @Override
-    public TempsDto startSession(String matricule) throws Exception {
+    public Actif startSession(String matricule) throws Exception {
         Collaborateur collaborateur = (Collaborateur)getterIdService.getUser(matricule);
         Actif actif = new Actif();
         actif.setCollaborateur(collaborateur);
         actif.setDate(new Date());
         actif.setHeur_debut(LocalTime.now());
         actif.setHeur_fin(null);
-        actif = tempsRepository.save(actif);
-        return dtoParser.toTempsDto(actif);
+        return tempsRepository.save(actif);
     }
 
     @Override
@@ -43,7 +44,25 @@ public class SessionServiceBd implements ISessionService {
     }
 
     @Override
-    public PauseDto startPause(String matricule, Integer type_id) throws Exception {
+    public Actif startActiviter(String matricule) throws Exception {
+        Collaborateur collaborateur = (Collaborateur)getterIdService.getUser(matricule);
+        Actif actif = new Actif();
+        actif.setCollaborateur(collaborateur);
+        actif.setDate(new Date());
+        actif.setHeur_debut(LocalTime.now());
+        actif.setHeur_fin(null);
+        return tempsRepository.save(actif);
+    }
+
+    @Override
+    public void endActiviter(Integer pause_id) throws Exception {
+        Actif actif = (Actif) getterIdService.getTemps(pause_id);
+        actif.setHeur_fin(LocalTime.now());
+        tempsRepository.save(actif);
+    }
+
+    @Override
+    public Pause startPause(String matricule, Integer type_id) throws Exception {
         Collaborateur collaborateur = (Collaborateur)getterIdService.getUser(matricule);
         TypePause typePause = getterIdService.getTypePause(type_id);
         Pause pause = new Pause();
@@ -52,8 +71,7 @@ public class SessionServiceBd implements ISessionService {
         pause.setDate(new Date());
         pause.setHeur_debut(LocalTime.now());
         pause.setHeur_fin(null);
-        pause = tempsRepository.save(pause);
-        return dtoParser.toPauseDto(pause);
+        return tempsRepository.save(pause);
     }
 
     @Override
@@ -63,16 +81,17 @@ public class SessionServiceBd implements ISessionService {
         tempsRepository.save(pause);
     }
 
+
+
     @Override
-    public TempsDto startInactiviter(String matricule) throws Exception {
+    public Inactif startInactiviter(String matricule) throws Exception {
         Collaborateur collaborateur = (Collaborateur)getterIdService.getUser(matricule);
         Inactif inactif = new Inactif();
         inactif.setCollaborateur(collaborateur);
         inactif.setDate(new Date());
         inactif.setHeur_debut(LocalTime.now());
         inactif.setHeur_fin(null);
-        inactif = tempsRepository.save(inactif);
-        return dtoParser.toTempsDto(inactif);
+        return tempsRepository.save(inactif);
     }
 
     @Override

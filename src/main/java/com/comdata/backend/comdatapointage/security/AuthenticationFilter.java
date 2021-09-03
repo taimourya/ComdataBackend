@@ -43,28 +43,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	/*@Override
-	protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
-			Authentication auth) throws IOException, ServletException {
-		
-		String userName = ((User)auth.getPrincipal()).getUsername();
 
-		UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
-
-		UserDto userDto = userService.getUser(userName);
-
-		
-		String token = Jwts.builder()
-				.setSubject(userName)
-				.claim("name" , userDto.getNom()+" "+userDto.getPrenom())
-				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
-				.compact();
-		
-		res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
-
-	}*/
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
@@ -82,5 +61,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 				.claim("roles", user.getAuthorities())
 				.compact();
 		response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX+jwt);
+
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(
+				"{\"" + SecurityConstants.HEADER_STRING + "\":\"" + SecurityConstants.TOKEN_PREFIX+jwt + "\"}"
+		);
+
 	}
 }

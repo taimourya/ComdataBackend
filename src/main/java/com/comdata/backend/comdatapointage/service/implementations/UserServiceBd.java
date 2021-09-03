@@ -11,6 +11,7 @@ import com.comdata.backend.comdatapointage.request.UserRequest;
 import com.comdata.backend.comdatapointage.service.DtoParser;
 import com.comdata.backend.comdatapointage.service.interfaces.IGetterIdService;
 import com.comdata.backend.comdatapointage.service.interfaces.IUserService;
+import com.comdata.backend.comdatapointage.threads.SessionCollaborateurThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,7 +59,7 @@ public class UserServiceBd implements IUserService {
         else if(userEntity instanceof Collaborateur)
             authorities.add(new SimpleGrantedAuthority("COLLABORATEUR"));
 
-        return new org.springframework.security.core.userdetails.User(userEntity.getCin() , userEntity.getPasswd() , authorities);
+        return new org.springframework.security.core.userdetails.User(userEntity.getMatricule() , userEntity.getPasswd() , authorities);
     }
 
     @Override
@@ -96,25 +97,32 @@ public class UserServiceBd implements IUserService {
     @Override
     public PageDto<UserDto> consulterCollaborateurs(String mc, String filterEtatCmpt, String filterSession, Integer activiter_id, int page, int size) throws Exception {
         Page<Collaborateur> userPage = null;
-        if(filterEtatCmpt.equalsIgnoreCase("activer") || filterEtatCmpt.equalsIgnoreCase("desactiver")) {
-            if(activiter_id == -1) {
-                userPage = collaborateurRepository.findByMcAndEtatCmpt(mc,
-                        filterEtatCmpt.equalsIgnoreCase("activer"), PageRequest.of(page, size));
+        if(filterEtatCmpt.equalsIgnoreCase("all")) {
+            if(filterEtatCmpt.equalsIgnoreCase("activer") || filterEtatCmpt.equalsIgnoreCase("desactiver")) {
+                if(activiter_id == -1) {
+                    userPage = collaborateurRepository.findByMcAndEtatCmpt(mc,
+                            filterEtatCmpt.equalsIgnoreCase("activer"), PageRequest.of(page, size));
+                }
+                else {
+                    Activiter activiter = getterIdService.getActiviter(activiter_id);
+                    userPage = collaborateurRepository.findByMcAndEtatCmptAndActiviter(mc, activiter,
+                            filterEtatCmpt.equalsIgnoreCase("activer"), PageRequest.of(page, size));
+                }
             }
-            else {
-                Activiter activiter = getterIdService.getActiviter(activiter_id);
-                userPage = collaborateurRepository.findByMcAndEtatCmptAndActiviter(mc, activiter,
-                        filterEtatCmpt.equalsIgnoreCase("activer"), PageRequest.of(page, size));
+            else {//ALL
+                if(activiter_id == -1) {
+                    userPage = collaborateurRepository.findByMc(mc, PageRequest.of(page, size));
+                }
+                else {
+                    Activiter activiter = getterIdService.getActiviter(activiter_id);
+                    userPage = collaborateurRepository.findByMcAndActiviter(mc, activiter, PageRequest.of(page, size));
+                }
             }
         }
-        else {//ALL
-            if(activiter_id == -1) {
-                userPage = collaborateurRepository.findByMc(mc, PageRequest.of(page, size));
-            }
-            else {
-                Activiter activiter = getterIdService.getActiviter(activiter_id);
-                userPage = collaborateurRepository.findByMcAndActiviter(mc, activiter, PageRequest.of(page, size));
-            }
+        else
+        {
+            //filterSession =>  all, fermer, actif, inactif, pause
+            
         }
 
         PageDto<UserDto> pageDto = new PageDto<>();

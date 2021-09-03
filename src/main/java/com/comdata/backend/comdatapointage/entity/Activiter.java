@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Activiter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
