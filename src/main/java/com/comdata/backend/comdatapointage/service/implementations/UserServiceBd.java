@@ -14,6 +14,7 @@ import com.comdata.backend.comdatapointage.service.interfaces.IUserService;
 import com.comdata.backend.comdatapointage.threads.SessionCollaborateurThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,10 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceBd implements IUserService {
@@ -122,7 +120,46 @@ public class UserServiceBd implements IUserService {
         else
         {
             //filterSession =>  all, fermer, actif, inactif, pause
-            
+            List<Collaborateur> collaborateurs = new ArrayList<>();
+            if(filterSession.equalsIgnoreCase("actif")) {
+                for (SessionCollaborateurThread session : SessionCollaborateurThread.sessions) {
+                    if(session.isActif())
+                        collaborateurs.add(session.getCollaborateur());
+                }
+            }
+            else if(filterEtatCmpt.equalsIgnoreCase("actif"))
+            {
+                for (int i = 0; i < size && i < SessionCollaborateurThread.sessions.size(); i++) {
+                    SessionCollaborateurThread session = SessionCollaborateurThread.sessions.get(i);
+                    if(session.isActif())
+                        collaborateurs.add(session.getCollaborateur());
+                }
+            }
+            else if(filterEtatCmpt.equalsIgnoreCase("inactif"))
+            {
+                for (int i = 0; i < size && i < SessionCollaborateurThread.sessions.size(); i++) {
+                    SessionCollaborateurThread session = SessionCollaborateurThread.sessions.get(i);
+                    if(session.isInactif())
+                        collaborateurs.add(session.getCollaborateur());
+                }
+            }
+            else if(filterEtatCmpt.equalsIgnoreCase("pause"))
+            {
+                for (int i = 0; i < size && i < SessionCollaborateurThread.sessions.size(); i++) {
+                    SessionCollaborateurThread session = SessionCollaborateurThread.sessions.get(i);
+                    if(session.isPause())
+                        collaborateurs.add(session.getCollaborateur());
+                }
+            }
+            else if(filterEtatCmpt.equalsIgnoreCase("fermer")) {
+                List<Collaborateur> allCollaborateurs = collaborateurRepository.findAll();
+                for(int i = 0; i < allCollaborateurs.size() && collaborateurs.size() < size; i++) {
+                    if(!SessionCollaborateurThread.containsCollaborateur(allCollaborateurs.get(i))) {
+                        collaborateurs.add(allCollaborateurs.get(i));
+                    }
+                }
+            }
+            userPage = new PageImpl<Collaborateur>(collaborateurs);
         }
 
         PageDto<UserDto> pageDto = new PageDto<>();

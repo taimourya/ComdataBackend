@@ -43,6 +43,10 @@ public class SessionCollaborateurThread extends Thread{
         return currentState == STATE.PAUSE;
     }
 
+    public Collaborateur getCollaborateur() {
+        return collaborateur;
+    }
+
     public SessionCollaborateurThread(String matricule, WebSocketSession session,
                                       IGetterIdService getterIdService, ISessionService sessionService) {
         try {
@@ -123,6 +127,14 @@ public class SessionCollaborateurThread extends Thread{
                 return sessionThread;
         }
         throw new NotFoundException("session not found");
+    }
+
+    public static boolean containsCollaborateur(Collaborateur c) throws NotFoundException {
+        for (SessionCollaborateurThread sessionThread : SessionCollaborateurThread.sessions) {
+            if(c.getMatricule().equals(sessionThread.collaborateur.getMatricule()))
+                return true;
+        }
+        return false;
     }
 
     @Override
