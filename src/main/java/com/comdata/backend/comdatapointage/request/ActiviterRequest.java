@@ -6,7 +6,7 @@ import lombok.Data;
 public class ActiviterRequest {
 
     private String name;
-    private int tFermetureSessionMs;
-    private int tInactiviteMs;
+    private int tfermetureSessionMs;
+    private int tinactiviteMs;
 
 }

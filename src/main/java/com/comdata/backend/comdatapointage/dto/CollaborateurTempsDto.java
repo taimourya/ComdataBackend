@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class CollaborateurTempsDto extends UserDto{
+public class CollaborateurTempsDto{
 
     private String collaborateur_fullname;
     private List<TempsDto> listTemps = new ArrayList<>();

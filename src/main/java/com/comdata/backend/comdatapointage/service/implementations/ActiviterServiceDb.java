@@ -50,8 +50,9 @@ public class ActiviterServiceDb implements IActiviterService {
     @Override
     public ActiviterDto addActiviter(ActiviterRequest request) {
         Parametrage parametrage = new Parametrage();
-        parametrage.setTFermetureSessionMs(request.getTFermetureSessionMs());
-        parametrage.setTInactiviteMs(request.getTInactiviteMs());
+        parametrage = parametrageRepository.save(parametrage);
+        parametrage.setTFermetureSessionMs(request.getTfermetureSessionMs());
+        parametrage.setTInactiviteMs(request.getTinactiviteMs());
         parametrage = parametrageRepository.save(parametrage);
 
         Activiter activiter = new Activiter();
@@ -62,7 +63,6 @@ public class ActiviterServiceDb implements IActiviterService {
         activiter.setParametrage(parametrage);
 
         activiter = activiterRepository.save(activiter);
-
         return dtoParser.toActiviterDto(activiter);
     }
 
@@ -70,8 +70,8 @@ public class ActiviterServiceDb implements IActiviterService {
     public ActiviterDto editActiviter(Integer id, ActiviterRequest request) throws Exception {
         Activiter activiter = getterIdService.getActiviter(id);
         Parametrage parametrage = activiter.getParametrage();
-        parametrage.setTFermetureSessionMs(request.getTFermetureSessionMs());
-        parametrage.setTInactiviteMs(request.getTInactiviteMs());
+        parametrage.setTFermetureSessionMs(request.getTfermetureSessionMs());
+        parametrage.setTInactiviteMs(request.getTinactiviteMs());
         parametrage = parametrageRepository.save(parametrage);
 
         activiter.setNom(request.getName());

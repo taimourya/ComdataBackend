@@ -169,7 +169,7 @@ public class SessionCollaborateurThread extends Thread{
                             break;
                         }
                         session.sendMessage(new TextMessage("vous avez ete inactif votre session va se fermer"));
-                        endInactiviter();
+                        sessionService.endInactiviter(currentTemps.getId());
                         currentState = STATE.CLOSED;
                         //no break for continue
                     case CLOSED:

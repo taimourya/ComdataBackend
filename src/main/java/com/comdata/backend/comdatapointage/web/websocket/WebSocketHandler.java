@@ -40,9 +40,13 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
             String route = splited[1].trim();
             if(route.startsWith("start/pause")) {
                 String[] params = route.split("\\?");
-                System.out.println(params[2]);
-                SessionCollaborateurThread s = SessionCollaborateurThread.findSession(session);
-                s.startPause(1);
+                if(params.length >= 2) {
+                    if(params[1].startsWith("id")) {
+                        Integer id = Integer.parseInt(params[1].split("=")[1].trim());
+                        SessionCollaborateurThread s = SessionCollaborateurThread.findSession(session);
+                        s.startPause(id);
+                    }
+                }
             }
             else if(route.startsWith("end/pause")) {
                 SessionCollaborateurThread s = SessionCollaborateurThread.findSession(session);

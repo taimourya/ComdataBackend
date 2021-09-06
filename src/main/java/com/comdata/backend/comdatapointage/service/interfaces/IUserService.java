@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public interface IUserService extends UserDetailsService {
 
 
+    public String getAuthMatricule();
+
     UserDto consulterUser(String matricule) throws Exception;
 
     //mc => filtrer par mot cle

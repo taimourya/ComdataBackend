@@ -45,8 +45,8 @@ public class ActiviterServiceTest {
     public void addActiviteTest() {
         ActiviterRequest activiterRequest = new ActiviterRequest();
         activiterRequest.setName("new");
-        activiterRequest.setTFermetureSessionMs(1000);
-        activiterRequest.setTInactiviteMs(1500);
+        activiterRequest.setTfermetureSessionMs(1000);
+        activiterRequest.setTinactiviteMs(1500);
         ActiviterDto activiterDto = activiterService.addActiviter(activiterRequest);
 
         Assertions.assertEquals("new", activiterDto.getNom());
@@ -59,13 +59,13 @@ public class ActiviterServiceTest {
     public void editActiviterTest() {
         ActiviterRequest activiterRequest = new ActiviterRequest();
         activiterRequest.setName("new");
-        activiterRequest.setTFermetureSessionMs(1000);
-        activiterRequest.setTInactiviteMs(1500);
+        activiterRequest.setTfermetureSessionMs(1000);
+        activiterRequest.setTinactiviteMs(1500);
         ActiviterDto activiterDto = activiterService.addActiviter(activiterRequest);
 
         activiterRequest.setName("newedit");
-        activiterRequest.setTFermetureSessionMs(800);
-        activiterRequest.setTInactiviteMs(900);
+        activiterRequest.setTfermetureSessionMs(800);
+        activiterRequest.setTinactiviteMs(900);
 
         try {
             activiterDto = activiterService.editActiviter(activiterDto.getId(), activiterRequest);
