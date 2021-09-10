@@ -31,7 +31,7 @@ public class SuperviseurController implements ISuperviseurController {
     public UserDto getCollaborateur(String matricule) throws Exception {
         Superviseur superviseur = (Superviseur) getterIdService.getUser(userService.getAuthMatricule());
         UserDto collaborateur = userService.consulterUser(matricule);
-        if(((ColSupActiviterDto)collaborateur).getActiviterId() == superviseur.getActiviter().getId())
+        if(collaborateur.getRoleName().equals("collaborateur") && ((ColSupActiviterDto)collaborateur).getActiviterId() == superviseur.getActiviter().getId())
             return collaborateur;
 
         throw new Exception("vous n'avez pas le droit de visualiser ce collaborateur");
@@ -49,7 +49,10 @@ public class SuperviseurController implements ISuperviseurController {
     public UserDto editCollaborateur(String matricule, UserRequest userRequest) throws Exception {
         Superviseur superviseur = (Superviseur) getterIdService.getUser(userService.getAuthMatricule());
         UserDto collaborateur = userService.consulterUser(matricule);
-        if(!(((ColSupActiviterDto)collaborateur).getActiviterId() == superviseur.getActiviter().getId()))
+        if(!collaborateur.getRoleName().equals("collaboareur")) {
+            throw new Exception("vous n'avez pas le droit de modifier un superviseur");
+        }
+        if(((ColSupActiviterDto)collaborateur).getActiviterId() != superviseur.getActiviter().getId())
             throw new Exception("vous n'avez pas le droit de visualiser ce collaborateur");
         userRequest.setActiviter_id(superviseur.getActiviter().getId());
         return userService.editUser(matricule, userRequest);
@@ -59,7 +62,7 @@ public class SuperviseurController implements ISuperviseurController {
     public void enableCollaborateur(String matricule) throws Exception {
         Superviseur superviseur = (Superviseur) getterIdService.getUser(userService.getAuthMatricule());
         UserDto collaborateur = userService.consulterUser(matricule);
-        if(((ColSupActiviterDto)collaborateur).getActiviterId() == superviseur.getActiviter().getId()) {
+        if(collaborateur.getRoleName().equals("collaborateur") && ((ColSupActiviterDto)collaborateur).getActiviterId() == superviseur.getActiviter().getId()) {
             userService.enableUser(matricule);
             return;
         }
@@ -71,7 +74,7 @@ public class SuperviseurController implements ISuperviseurController {
     public void disableCollaborateur(String matricule) throws Exception {
         Superviseur superviseur = (Superviseur) getterIdService.getUser(userService.getAuthMatricule());
         UserDto collaborateur = userService.consulterUser(matricule);
-        if(((ColSupActiviterDto)collaborateur).getActiviterId() == superviseur.getActiviter().getId()) {
+        if(collaborateur.getRoleName().equals("collaborateur") && ((ColSupActiviterDto)collaborateur).getActiviterId() == superviseur.getActiviter().getId()) {
             userService.disableUser(matricule);
             return;
         }
@@ -82,7 +85,7 @@ public class SuperviseurController implements ISuperviseurController {
     @Override
     public CollaborateurAllTempsDto getAllTempsCollaborateur(String matricule) throws Exception {Superviseur superviseur = (Superviseur) getterIdService.getUser(userService.getAuthMatricule());
         UserDto collaborateur = userService.consulterUser(matricule);
-        if(((ColSupActiviterDto)collaborateur).getActiviterId() == superviseur.getActiviter().getId()) {
+        if(collaborateur.getRoleName().equals("collaborateur") && ((ColSupActiviterDto)collaborateur).getActiviterId() == superviseur.getActiviter().getId()) {
             return tempsService.consulterAllTempsCollaborateur(matricule);
         }
 

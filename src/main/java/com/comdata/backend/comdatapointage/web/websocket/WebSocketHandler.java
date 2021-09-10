@@ -1,5 +1,6 @@
 package com.comdata.backend.comdatapointage.web.websocket;
 
+import com.comdata.backend.comdatapointage.security.SecurityConstants;
 import com.comdata.backend.comdatapointage.service.JwtTokenService;
 import com.comdata.backend.comdatapointage.service.interfaces.IGetterIdService;
 import com.comdata.backend.comdatapointage.service.interfaces.ISessionService;
@@ -69,6 +70,11 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
     private void startSession(WebSocketSession session, String token) throws IOException {
         System.out.println(token);
+        if(!token.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+            session.sendMessage(new TextMessage("failed jwt"));
+            return;
+        }
+        token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
         if(!jwtTokenService.isTokenExpired(token) && jwtTokenService.checkTheRole(token, "COLLABORATEUR")) {
             //start session with matricule (the matricule jwt)
             //send message "success"

@@ -146,7 +146,7 @@ public class DtoParser {
         collaborateurTempsDto.setCollaborateur_fullname(collaborateur.getFirstname() + " " + collaborateur.getLastname());
         collaborateurTempsDto.setTotal(0);
         for(Pause pause : collaborateur.getPauses()) {
-            collaborateurTempsDto.getListTemps().add(toTempsDto(pause));
+            collaborateurTempsDto.getListTemps().add(toPauseDto(pause));
             double difference = timeCalculator.difference(pause.getHeur_debut(), pause.getHeur_fin());
             collaborateurTempsDto.setTotal(collaborateurTempsDto.getTotal() + difference);
         }

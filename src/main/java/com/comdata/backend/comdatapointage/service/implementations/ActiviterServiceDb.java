@@ -5,15 +5,19 @@ import com.comdata.backend.comdatapointage.dao.ParametrageRepository;
 import com.comdata.backend.comdatapointage.dto.ActiviterDto;
 import com.comdata.backend.comdatapointage.dto.PageDto;
 import com.comdata.backend.comdatapointage.entity.Activiter;
+import com.comdata.backend.comdatapointage.entity.Collaborateur;
 import com.comdata.backend.comdatapointage.entity.Parametrage;
+import com.comdata.backend.comdatapointage.entity.Superviseur;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
 import com.comdata.backend.comdatapointage.service.DtoParser;
 import com.comdata.backend.comdatapointage.service.interfaces.IActiviterService;
 import com.comdata.backend.comdatapointage.service.interfaces.IGetterIdService;
+import com.comdata.backend.comdatapointage.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Optional;
@@ -21,8 +25,9 @@ import java.util.Optional;
 @Service
 public class ActiviterServiceDb implements IActiviterService {
 
-    @Autowired private IGetterIdService getterIdService;
     @Autowired private DtoParser dtoParser;
+    @Autowired private IGetterIdService getterIdService;
+    @Autowired private IUserService userService;
     @Autowired private ActiviterRepository activiterRepository;
     @Autowired private ParametrageRepository parametrageRepository;
 
@@ -86,16 +91,31 @@ public class ActiviterServiceDb implements IActiviterService {
     }
 
     @Override
+    @Transactional
     public void enableActiviter(Integer id) throws Exception {
         Activiter activiter = getterIdService.getActiviter(id);
         activiter.setActive(true);
+
+        for (Collaborateur collaborateur : activiter.getCollaborateurs()) {
+            userService.enableUser(collaborateur.getMatricule());
+        }
+        for (Superviseur e : activiter.getSuperviseurs()) {
+            userService.enableUser(e.getMatricule());
+        }
         activiterRepository.save(activiter);
     }
 
     @Override
+    @Transactional
     public void disableActiviter(Integer id) throws Exception {
         Activiter activiter = getterIdService.getActiviter(id);
         activiter.setActive(false);
+        for (Collaborateur e : activiter.getCollaborateurs()) {
+            userService.disableUser(e.getMatricule());
+        }
+        for (Superviseur e : activiter.getSuperviseurs()) {
+            userService.disableUser(e.getMatricule());
+        }
         activiterRepository.save(activiter);
     }
 }

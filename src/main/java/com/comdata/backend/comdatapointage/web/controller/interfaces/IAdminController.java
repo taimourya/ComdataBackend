@@ -1,6 +1,7 @@
 package com.comdata.backend.comdatapointage.web.controller.interfaces;
 
 import com.comdata.backend.comdatapointage.dto.ActiviterDto;
+import com.comdata.backend.comdatapointage.dto.CollaborateurAllTempsDto;
 import com.comdata.backend.comdatapointage.dto.PageDto;
 import com.comdata.backend.comdatapointage.dto.UserDto;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
@@ -57,5 +58,8 @@ public interface IAdminController {
 
     @PutMapping("/activite/disable")
     void disableActivite(@RequestParam Integer id) throws Exception;
+
+    @GetMapping("collaborateur/temps")
+    CollaborateurAllTempsDto getAllTempsCollaborateur(@RequestParam String matricule) throws Exception;
 
 }

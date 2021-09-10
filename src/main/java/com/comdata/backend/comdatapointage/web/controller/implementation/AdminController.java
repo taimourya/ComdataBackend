@@ -2,11 +2,13 @@ package com.comdata.backend.comdatapointage.web.controller.implementation;
 
 import ch.qos.logback.core.joran.action.IADataForComplexProperty;
 import com.comdata.backend.comdatapointage.dto.ActiviterDto;
+import com.comdata.backend.comdatapointage.dto.CollaborateurAllTempsDto;
 import com.comdata.backend.comdatapointage.dto.PageDto;
 import com.comdata.backend.comdatapointage.dto.UserDto;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
 import com.comdata.backend.comdatapointage.request.UserRequest;
 import com.comdata.backend.comdatapointage.service.interfaces.IActiviterService;
+import com.comdata.backend.comdatapointage.service.interfaces.ITempsService;
 import com.comdata.backend.comdatapointage.service.interfaces.IUserService;
 import com.comdata.backend.comdatapointage.web.controller.interfaces.IAdminController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ public class AdminController implements IAdminController {
 
     @Autowired private IUserService userService;
     @Autowired private IActiviterService activiterService;
+    @Autowired private ITempsService tempsService;
 
 
     @Override
@@ -26,6 +29,7 @@ public class AdminController implements IAdminController {
                                      String filterSession, Integer activiter_id,
                                      int page, int size) throws Exception {
 
+        System.out.println("etat : " + filterEtatCmpt);
         if(typeUser.equalsIgnoreCase("admin")) {
             return userService.consulterAdmins(mc, filterEtatCmpt, page, size);
         }
@@ -78,6 +82,9 @@ public class AdminController implements IAdminController {
 
     @Override
     public ActiviterDto addActivite(ActiviterRequest activiterRequest) {
+        System.out.println("name : " + activiterRequest.getName());
+        System.out.println("tina : " + activiterRequest.getTinactiviteMs());
+        System.out.println("tfer : " + activiterRequest.getTfermetureSessionMs());
         return activiterService.addActiviter(activiterRequest);
     }
 
@@ -94,5 +101,10 @@ public class AdminController implements IAdminController {
     @Override
     public void disableActivite(Integer id) throws Exception {
         activiterService.disableActiviter(id);
+    }
+
+    @Override
+    public CollaborateurAllTempsDto getAllTempsCollaborateur(String matricule) throws Exception {
+        return tempsService.consulterAllTempsCollaborateur(matricule);
     }
 }

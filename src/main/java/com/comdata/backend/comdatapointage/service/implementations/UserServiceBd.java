@@ -103,7 +103,7 @@ public class UserServiceBd implements IUserService {
     @Override
     public PageDto<UserDto> consulterCollaborateurs(String mc, String filterEtatCmpt, String filterSession, Integer activiter_id, int page, int size) throws Exception {
         Page<Collaborateur> userPage = null;
-        if(filterEtatCmpt.equalsIgnoreCase("all")) {
+        if(filterSession.equalsIgnoreCase("all")) {
             if(filterEtatCmpt.equalsIgnoreCase("activer") || filterEtatCmpt.equalsIgnoreCase("desactiver")) {
                 if(activiter_id == -1) {
                     userPage = collaborateurRepository.findByMcAndEtatCmpt(mc,
@@ -240,6 +240,9 @@ public class UserServiceBd implements IUserService {
 
     @Override
     public UserDto addUser(UserRequest request) throws Exception {
+        System.out.println("date : " + request.getDate_naissance());
+        System.out.println("password : " + request.getPasswd());
+        System.out.println("confirmPasswd : " + request.getConfirmPasswd());
         if(!request.getPasswd().equals(request.getConfirmPasswd()))
             throw new Exception("erreur confirmation mot de passe");
         User user = null;
@@ -340,6 +343,12 @@ public class UserServiceBd implements IUserService {
     public void enableUser(String matricule) throws Exception {
         User user = getterIdService.getUser(matricule);
         user.setActive(true);
+        if(user instanceof Collaborateur && !((Collaborateur) user).getActiviter().isActive()) {
+            throw new Exception("l'activiter du collaborateur est desactiver impossible de l'activer");
+        }
+        if(user instanceof Superviseur && !((Superviseur) user).getActiviter().isActive()) {
+            throw new Exception("l'activiter du superviseur est desactiver impossible de l'activer");
+        }
         userRepository.save(user);
     }
 
