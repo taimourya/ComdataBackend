@@ -26,7 +26,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-
+        System.out.println("msg = " + message.getPayload());
         String[] splited = message.getPayload().split(":");
         if(splited.length < 2) {
             session.sendMessage(new TextMessage("operation impossible"));
@@ -65,6 +65,17 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
                 SessionCollaborateurThread s = SessionCollaborateurThread.findSession(session);
                 s.endSession();
             }
+            else if(route.startsWith("inactif")) {
+                String[] params = route.split("\\?");
+                if(params.length >= 2) {
+                    if(params[1].startsWith("cpt")) {
+                        Integer cpt = Integer.parseInt(params[1].split("=")[1].trim());
+                        System.out.println("cpt: " + cpt);
+                        SessionCollaborateurThread s = SessionCollaborateurThread.findSession(session);
+                        s.startInactiviterAfterCpt(cpt);
+                    }
+                }
+            }
         }
     }
 
@@ -101,7 +112,9 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        SessionCollaborateurThread s = SessionCollaborateurThread.findSession(session);
-        s.endSession();
+        try {
+            SessionCollaborateurThread s = SessionCollaborateurThread.findSession(session);
+            s.endSession();
+        } catch (Exception e) {}
     }
 }

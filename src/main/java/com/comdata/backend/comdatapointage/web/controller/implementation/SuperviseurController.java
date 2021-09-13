@@ -93,6 +93,12 @@ public class SuperviseurController implements ISuperviseurController {
     }
 
     @Override
+    public ActiviterDto getActivite() throws Exception {
+        Superviseur superviseur = (Superviseur) getterIdService.getUser(userService.getAuthMatricule());
+        return activiterService.consulterActiviter(superviseur.getActiviter().getId());
+    }
+
+    @Override
     public ActiviterDto editParametrageActiviter(ActiviterRequest activiterRequest) throws Exception {
         Superviseur superviseur = (Superviseur) getterIdService.getUser(userService.getAuthMatricule());
         activiterRequest.setName(superviseur.getActiviter().getNom());

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 public class TimeCalculator {
 
     public double difference(LocalTime t1, LocalTime t2) {
+        if(t1 == null || t2 == null)
+            return 0;
         double hour = t2.getHour() - t1.getHour();
         double minutes = t2.getMinute() - t1.getMinute();
         double seconds = t2.getSecond() - t1.getSecond();

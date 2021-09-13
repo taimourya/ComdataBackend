@@ -36,6 +36,9 @@ public interface ISuperviseurController {
     @GetMapping("collaborateur/temps")
     CollaborateurAllTempsDto getAllTempsCollaborateur(@RequestParam String matricule) throws Exception;
 
+    @GetMapping("activiter/parametrage")
+    ActiviterDto getActivite() throws Exception;
+
     @PutMapping("activiter/parametrage")
     ActiviterDto editParametrageActiviter(@RequestBody ActiviterRequest activiterRequest) throws Exception;
 

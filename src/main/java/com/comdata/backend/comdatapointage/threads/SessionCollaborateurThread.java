@@ -53,8 +53,12 @@ public class SessionCollaborateurThread extends Thread{
             System.out.println("start session of " + matricule);
             this.collaborateur = (Collaborateur) getterIdService.getUser(matricule);
             this.parametrage = collaborateur.getActiviter().getParametrage();
-            this.currentState = STATE.ACTIF;
-            this.currentTemps = sessionService.startSession(collaborateur.getMatricule());
+            if(containsCollaborateur(this.collaborateur))
+                this.currentState = STATE.CLOSED;
+            else {
+                this.currentState = STATE.ACTIF;
+                this.currentTemps = sessionService.startSession(collaborateur.getMatricule());
+            }
             this.session = session;
             this.getterIdService = getterIdService;
             this.sessionService = sessionService;
@@ -66,6 +70,8 @@ public class SessionCollaborateurThread extends Thread{
     private void startActiviter() throws Exception {
         if(currentState == STATE.PAUSE)
             return;
+        if(currentState == STATE.INACTIF)
+            endInactiviter();
         currentState = STATE.ACTIF;
         currentTemps = sessionService.startActiviter(collaborateur.getMatricule());
     }
@@ -137,6 +143,19 @@ public class SessionCollaborateurThread extends Thread{
         return false;
     }
 
+    public void startInactiviterAfterCpt(int cpt) throws Exception {
+
+        if(cpt == 0) {
+            if(currentState == STATE.INACTIF) {
+                this.startActiviter();
+            }
+        }
+        else if(cpt * 1000 >= parametrage.getTInactiviteMs()) {
+            if(currentState != STATE.INACTIF)
+                this.startInactiviter();
+        }
+    }
+
     @Override
     public void run() {
 
@@ -144,7 +163,6 @@ public class SessionCollaborateurThread extends Thread{
         while (!fin) {
             System.out.println("----------------------------");
             System.out.println("current : " + currentState);
-            System.out.println("actif : " + currentTemps.getId());
             if(currentTemps != null) {
                 System.out.println("pauseIna : " + currentTemps.getId() + " and type is : " + currentTemps.getClass().getSimpleName());
             }
@@ -173,9 +191,11 @@ public class SessionCollaborateurThread extends Thread{
                         currentState = STATE.CLOSED;
                         //no break for continue
                     case CLOSED:
-                        session.sendMessage(new TextMessage("fermeture session"));
-                        session.close();
-                        SessionCollaborateurThread.sessions.remove(session);
+                        if(session.isOpen()) {
+                            session.sendMessage(new TextMessage("fermeture session"));
+                            session.close();
+                        }
+                        SessionCollaborateurThread.sessions.remove(this);
                         fin = true;
                         break;
                 }
