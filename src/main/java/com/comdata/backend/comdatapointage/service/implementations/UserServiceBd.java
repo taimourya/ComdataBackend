@@ -47,6 +47,9 @@ public class UserServiceBd implements IUserService {
 
         User userEntity = optionalUser.get();
 
+        if(!userEntity.isActive())
+            throw new UsernameNotFoundException(matricule);
+
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
         authorities.add(new SimpleGrantedAuthority("USER"));

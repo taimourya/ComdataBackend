@@ -1,12 +1,12 @@
 package com.comdata.backend.comdatapointage.web.controller.interfaces;
 
-import com.comdata.backend.comdatapointage.dto.ActiviterDto;
-import com.comdata.backend.comdatapointage.dto.CollaborateurAllTempsDto;
-import com.comdata.backend.comdatapointage.dto.PageDto;
-import com.comdata.backend.comdatapointage.dto.UserDto;
+import com.comdata.backend.comdatapointage.dto.*;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
 import com.comdata.backend.comdatapointage.request.UserRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RequestMapping("/admin")
 public interface IAdminController {
@@ -62,4 +62,29 @@ public interface IAdminController {
     @GetMapping("collaborateur/temps")
     CollaborateurAllTempsDto getAllTempsCollaborateur(@RequestParam String matricule) throws Exception;
 
+    @GetMapping("collaborateur/stats2")
+    StatsCollaborateurDto getStatColl(String matricule, String paramTime, @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateDebut) throws Exception;
+
+    @GetMapping("collaborateur/stats")
+    StatsCollaborateur2Dto getStatColl2(
+            String matricule,
+            String paramTime,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) Date to
+    ) throws Exception;
+
+    @GetMapping("activiter/stats")
+    StatsAllColByActivite2Dto getStatActiviter(
+            Integer id,
+            String paramTime,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) Date to
+    ) throws Exception;
+
+    @GetMapping("activiter/stats/pie")
+    StatsPieByActiviteDto getStatPieActiviter(
+            Integer id,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) Date to
+    ) throws Exception;
 }

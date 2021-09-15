@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.time.temporal.Temporal;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -179,5 +180,60 @@ public class DtoParser {
         typeDto.setLibelle(type.getLibelle());
         return typeDto;
     }
+
+
+    public StatsParamsDto toStatsParamsDto(List<Temps> temps, String paramTime) {
+        StatsParamsDto statsParamsDto = new StatsParamsDto();
+        int currentYear = -1;
+        int currentMonth = -1;
+        int currentDay = -1;
+
+        StatsParamDto statsParam = new StatsParamDto();
+        statsParam.setValue(0);
+
+        Calendar calendar = Calendar.getInstance();
+
+        for(Temps a : temps) {
+            calendar.setTime(a.getDate());
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            System.out.println(year + " / " + month + " / " + day);
+            //if(currentDay != day || currentMonth != month || currentYear != year) {
+            if((paramTime.equalsIgnoreCase("year") && currentYear != year)
+                    || (paramTime.equalsIgnoreCase("month") && currentMonth != month)
+                    || (paramTime.equalsIgnoreCase("day") && currentDay != day)) {
+                System.out.println("in if");
+                if(currentYear != -1) {
+                    System.out.println("in if adding " + statsParam.getDate() + " : v => " + statsParam.getValue());
+                    statsParamsDto.getParametres().add(statsParam);
+                }
+                statsParam = new StatsParamDto();
+                statsParam.setValue(0);
+                if(paramTime.equalsIgnoreCase("year")) {
+                    currentYear = year;
+                    statsParam.setDate(year+"");
+                }
+                else if(paramTime.equalsIgnoreCase("month")) {
+                    currentYear = year;
+                    currentMonth = month;
+                    statsParam.setDate(year + "/" + (month+1));
+                }
+                else {
+                    currentYear = year;
+                    currentMonth = month;
+                    currentDay = day;
+                    statsParam.setDate(year + "/" + (month+1)+"/" + day);
+                }
+            }
+
+            statsParam.setValue(statsParam.getValue() + timeCalculator.difference(a.getHeur_debut(), a.getHeur_fin()));
+
+        }
+
+        statsParamsDto.getParametres().add(statsParam);
+        return statsParamsDto;
+    }
+
 
 }

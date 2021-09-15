@@ -4,13 +4,12 @@ import com.comdata.backend.comdatapointage.dto.*;
 import com.comdata.backend.comdatapointage.entity.Superviseur;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
 import com.comdata.backend.comdatapointage.request.UserRequest;
-import com.comdata.backend.comdatapointage.service.interfaces.IActiviterService;
-import com.comdata.backend.comdatapointage.service.interfaces.IGetterIdService;
-import com.comdata.backend.comdatapointage.service.interfaces.ITempsService;
-import com.comdata.backend.comdatapointage.service.interfaces.IUserService;
+import com.comdata.backend.comdatapointage.service.interfaces.*;
 import com.comdata.backend.comdatapointage.web.controller.interfaces.ISuperviseurController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 @RestController
 public class SuperviseurController implements ISuperviseurController {
@@ -19,6 +18,7 @@ public class SuperviseurController implements ISuperviseurController {
     @Autowired private IUserService userService;
     @Autowired private IActiviterService activiterService;
     @Autowired private ITempsService tempsService;
+    @Autowired private IStatistiqueService statistiqueService;
 
     @Override
     public PageDto<UserDto> getCollaborateurs(String mc, String filterEtatCmpt, String filterSession, int page, int size) throws Exception {
@@ -104,5 +104,14 @@ public class SuperviseurController implements ISuperviseurController {
         activiterRequest.setName(superviseur.getActiviter().getNom());
 
         return activiterService.editActiviter(superviseur.getActiviter().getId(), activiterRequest);
+    }
+
+    @Override
+    public StatsPieByActiviteDto getStatPieActiviter(Date from, Date to) throws Exception {
+        Superviseur superviseur = (Superviseur) getterIdService.getUser(userService.getAuthMatricule());
+
+        return statistiqueService.consulterStatsPieByActivite(
+                superviseur.getActiviter().getId(), from, to
+        );
     }
 }

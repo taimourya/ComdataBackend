@@ -1,13 +1,11 @@
 package com.comdata.backend.comdatapointage.web.controller.implementation;
 
 import ch.qos.logback.core.joran.action.IADataForComplexProperty;
-import com.comdata.backend.comdatapointage.dto.ActiviterDto;
-import com.comdata.backend.comdatapointage.dto.CollaborateurAllTempsDto;
-import com.comdata.backend.comdatapointage.dto.PageDto;
-import com.comdata.backend.comdatapointage.dto.UserDto;
+import com.comdata.backend.comdatapointage.dto.*;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
 import com.comdata.backend.comdatapointage.request.UserRequest;
 import com.comdata.backend.comdatapointage.service.interfaces.IActiviterService;
+import com.comdata.backend.comdatapointage.service.interfaces.IStatistiqueService;
 import com.comdata.backend.comdatapointage.service.interfaces.ITempsService;
 import com.comdata.backend.comdatapointage.service.interfaces.IUserService;
 import com.comdata.backend.comdatapointage.web.controller.interfaces.IAdminController;
@@ -16,12 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 @RestController
 public class AdminController implements IAdminController {
 
     @Autowired private IUserService userService;
     @Autowired private IActiviterService activiterService;
     @Autowired private ITempsService tempsService;
+    @Autowired private IStatistiqueService statistiqueService;
 
 
     @Override
@@ -107,4 +108,35 @@ public class AdminController implements IAdminController {
     public CollaborateurAllTempsDto getAllTempsCollaborateur(String matricule) throws Exception {
         return tempsService.consulterAllTempsCollaborateur(matricule);
     }
+
+    @Override
+    public StatsCollaborateurDto getStatColl(String matricule, String paramTime, Date dateDebut) throws Exception {
+        return statistiqueService.consulterStatistiqueCollaborateur(matricule, paramTime, dateDebut);
+    }
+
+
+    @Override
+    public StatsCollaborateur2Dto getStatColl2(String matricule, String paramTime, Date from, Date to) throws Exception {
+        if(to == null) {
+            to = new Date();
+        }
+        return statistiqueService.consulterStatistiqueCollaborateur2(matricule, paramTime, from, to);
+    }
+
+    @Override
+    public StatsAllColByActivite2Dto getStatActiviter(Integer id, String paramTime, Date from, Date to) throws Exception {
+        if(to == null) {
+            to = new Date();
+        }
+        return statistiqueService.consulterStatistiqueByActivite(id, paramTime, from, to);
+    }
+
+    @Override
+    public StatsPieByActiviteDto getStatPieActiviter(Integer id, Date from, Date to) throws Exception {
+        if(to == null) {
+            to = new Date();
+        }
+        return statistiqueService.consulterStatsPieByActivite(id, from, to);
+    }
+
 }

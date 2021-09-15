@@ -95,13 +95,29 @@ public class DataInitialiserDb implements IDataInitialiser {
                                 null,
                                 dateFormat.parse("2021-07-0"+i),
                                 LocalTime.of(10, 30, 0),
-                                LocalTime.of(18, 30, 0),
+                                LocalTime.of(12, 30, 0),
+                                c
+                        );
+                        tempsRepository.save(actif);
+                        actif = new Actif(
+                                null,
+                                dateFormat.parse("2021-08-0"+i),
+                                LocalTime.of(10, 30, 0),
+                                LocalTime.of(14, 30, 0),
+                                c
+                        );
+                        tempsRepository.save(actif);
+                        actif = new Actif(
+                                null,
+                                dateFormat.parse("2021-09-0"+i),
+                                LocalTime.of(10, 30, 0),
+                                LocalTime.of(16, 30, 0),
                                 c
                         );
                         tempsRepository.save(actif);
                         Inactif inactif = new Inactif(
                                 null,
-                                dateFormat.parse("2021-07-0"+i),
+                                dateFormat.parse("2021-06-0"+i),
                                 LocalTime.of(11, 30, 0),
                                 LocalTime.of(12, 00, 0),
                                 c
@@ -109,7 +125,7 @@ public class DataInitialiserDb implements IDataInitialiser {
                         tempsRepository.save(inactif);
                         inactif = new Inactif(
                                 null,
-                                dateFormat.parse("2021-07-0"+i),
+                                dateFormat.parse("2021-07-"+i*2),
                                 LocalTime.of(13, 30, 0),
                                 LocalTime.of(14, 00, 0),
                                 c
@@ -117,7 +133,7 @@ public class DataInitialiserDb implements IDataInitialiser {
                         tempsRepository.save(inactif);
                         inactif = new Inactif(
                                 null,
-                                dateFormat.parse("2021-07-0"+i),
+                                dateFormat.parse("2021-08-0"+i),
                                 LocalTime.of(15, 30, 0),
                                 LocalTime.of(16, 00, 0),
                                 c
@@ -127,7 +143,7 @@ public class DataInitialiserDb implements IDataInitialiser {
 
                         Pause pause = new Pause(
                                 null,
-                                dateFormat.parse("2021-07-0"+i),
+                                dateFormat.parse("2021-09-0"+i),
                                 LocalTime.of(10, 30, 0),
                                 LocalTime.of(10, 55, 0),
                         typePauseRepository.findById(1).get(), c

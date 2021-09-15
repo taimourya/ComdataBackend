@@ -3,7 +3,10 @@ package com.comdata.backend.comdatapointage.web.controller.interfaces;
 import com.comdata.backend.comdatapointage.dto.*;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
 import com.comdata.backend.comdatapointage.request.UserRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RequestMapping("/superviseur")
 public interface ISuperviseurController {
@@ -41,5 +44,11 @@ public interface ISuperviseurController {
 
     @PutMapping("activiter/parametrage")
     ActiviterDto editParametrageActiviter(@RequestBody ActiviterRequest activiterRequest) throws Exception;
+
+    @GetMapping("activiter/stats/pie")
+    StatsPieByActiviteDto getStatPieActiviter(
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) Date to
+    ) throws Exception;
 
 }
