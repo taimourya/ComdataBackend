@@ -4,7 +4,13 @@ import com.comdata.backend.comdatapointage.dto.PageDto;
 import com.comdata.backend.comdatapointage.dto.TypeDto;
 import com.comdata.backend.comdatapointage.dto.UserDto;
 import com.comdata.backend.comdatapointage.request.UserRequest;
+import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RequestMapping("/user")
 public interface IUserController {
@@ -16,4 +22,10 @@ public interface IUserController {
 
     @GetMapping("/pause/types")
     PageDto<TypeDto> getTypes() throws Exception;
+
+    @PostMapping("/upload/image")
+    UserDto uploadFile(@RequestParam("image") MultipartFile image) throws Exception;
+
+    @GetMapping("/image/{imageName:.+}") //autoriser par tout les utilisateurs (anonyme ou authentifier)
+    ResponseEntity<Resource> getImage(@PathVariable String imageName, HttpServletRequest request) throws Exception;
 }

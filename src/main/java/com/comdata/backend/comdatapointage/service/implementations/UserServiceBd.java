@@ -280,7 +280,7 @@ public class UserServiceBd implements IUserService {
         user.setEmail(request.getEmail());
         user.setDate_naissance(request.getDate_naissance());
         user.setDate_creation(new Date());
-
+        user.setImage("default_image.png");
         generatedMat += user.getCin().substring(0, 3);
         generatedMat += user.getFirstname().substring(0, 3);
         generatedMat += user.getLastname().substring(0, 3);
@@ -360,6 +360,16 @@ public class UserServiceBd implements IUserService {
         User user = getterIdService.getUser(matricule);
         user.setActive(false);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDto changeImage(String matricule, String imageName) throws Exception {
+        User user = getterIdService.getUser(matricule);
+        user.setImage(imageName);
+        user = userRepository.save(user);
+        if(user instanceof Admin)
+            return dtoParser.toUserDto(user);
+        return dtoParser.toColSupActiviterDto(user);
     }
 
 }

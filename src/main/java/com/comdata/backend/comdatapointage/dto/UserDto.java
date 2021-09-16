@@ -20,4 +20,5 @@ public class UserDto {
     private Date date_creation;
     private boolean isActive;
     private String roleName;
+    private String imageUri;
 }

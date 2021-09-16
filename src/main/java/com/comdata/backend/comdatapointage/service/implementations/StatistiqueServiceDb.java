@@ -251,9 +251,16 @@ public class StatistiqueServiceDb implements IStatistiqueService {
 
         double total = totalActivites + totalPauses + totalInactivites;
 
-        statsPie.setActivitesPercent((totalActivites * 100) / total);
-        statsPie.setPausesPercent((totalPauses * 100) / total);
-        statsPie.setInactivitesPercent((totalInactivites * 100) / total);
+        if(total != 0) {
+            statsPie.setActivitesPercent((totalActivites * 100) / total);
+            statsPie.setPausesPercent((totalPauses * 100) / total);
+            statsPie.setInactivitesPercent((totalInactivites * 100) / total);
+        }
+        else {
+            statsPie.setActivitesPercent(0);
+            statsPie.setPausesPercent(0);
+            statsPie.setInactivitesPercent(0);
+        }
 
         return statsPie;
     }

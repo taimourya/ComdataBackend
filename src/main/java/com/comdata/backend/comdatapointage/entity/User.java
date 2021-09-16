@@ -28,5 +28,6 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date_creation;
     private boolean isActive;
+    private String image;
 
 }

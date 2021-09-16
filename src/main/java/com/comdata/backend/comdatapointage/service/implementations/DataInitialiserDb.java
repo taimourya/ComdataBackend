@@ -59,6 +59,7 @@ public class DataInitialiserDb implements IDataInitialiser {
               "BE"+e, "adresse "+e, bCryptPasswordEncoder.encode("123"),
                     new Date(), new Date(), true
             );
+            admin.setImage("default_image.png");
             userRepository.save(admin);
         });
     }
@@ -72,6 +73,7 @@ public class DataInitialiserDb implements IDataInitialiser {
                         "BE"+e, "adresse "+e, bCryptPasswordEncoder.encode("123"),
                         new Date(), new Date(), true, a
                 );
+                s.setImage("default_image.png");
                 userRepository.save(s);
             });
         });
@@ -87,6 +89,7 @@ public class DataInitialiserDb implements IDataInitialiser {
                         "BE"+e, "adresse "+e, bCryptPasswordEncoder.encode("123"),
                         new Date(), new Date(), true, a
                 );
+                c.setImage("default_image.png");
                 c = userRepository.save(c);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 for(int i = 1; i <= 9; i++) {

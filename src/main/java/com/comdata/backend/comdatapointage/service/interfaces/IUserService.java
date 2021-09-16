@@ -33,7 +33,7 @@ public interface IUserService extends UserDetailsService {
     void enableUser(String matricule) throws Exception;
     void disableUser(String matricule) throws Exception;
 
-
+    UserDto changeImage(String matricule, String imageName) throws Exception;
 
 
 }

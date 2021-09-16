@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.sql.Time;
 import java.time.LocalTime;
@@ -30,6 +31,12 @@ public class DtoParser {
         userDto.setActive(user.isActive());
         userDto.setDate_creation(user.getDate_creation());
         userDto.setDate_naissance(user.getDate_naissance());
+        userDto.setImageUri(
+                ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/user/image/")
+                        .path(user.getImage())
+                        .toUriString()
+        );
         if(user instanceof Admin)
             userDto.setRoleName("admin");
         else if(user instanceof Superviseur)
@@ -73,6 +80,12 @@ public class DtoParser {
         colSupActiviterDto.setActive(user.isActive());
         colSupActiviterDto.setDate_creation(user.getDate_creation());
         colSupActiviterDto.setDate_naissance(user.getDate_naissance());
+        colSupActiviterDto.setImageUri(
+                ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/user/image/")
+                        .path(user.getImage())
+                        .toUriString()
+        );
         if(user instanceof Superviseur) {
             colSupActiviterDto.setRoleName("superviseur");
             colSupActiviterDto.setActiviterId(((Superviseur) user).getActiviter().getId());
