@@ -35,6 +35,11 @@ public class GetterIdServiceBd implements IGetterIdService {
     }
 
     @Override
+    public Activiter getActiviter(String nom) {
+        return activiterRepository.findByNom(nom);
+    }
+
+    @Override
     public Temps getTemps(Integer id) throws Exception {
         Optional<Temps> optional = tempsRepository.findById(id);
         if(optional.isPresent())

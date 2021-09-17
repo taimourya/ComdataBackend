@@ -14,4 +14,5 @@ public interface ActiviterRepository extends JpaRepository<Activiter, Integer> {
 
     Page<Activiter> findByNomContains(String mc, Pageable pageable);
 
+    Activiter findByNom(String nom);
 }

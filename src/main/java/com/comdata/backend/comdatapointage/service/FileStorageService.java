@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,6 +39,23 @@ public class FileStorageService {
         return fileName;
     }
 
+    public String createEmptyFile(String fileName) throws Exception {
+        if(fileName.contains("..")) {
+            throw new Exception("Sorry! Filename contains invalid path sequence " + fileName);
+        }
+        String fileNameWithDir = FILE_DIR + "/" + fileName;
+        File file = new File(fileNameWithDir);
+        if(file.exists()) {
+            deleteFile(fileName);
+        }
+        Path targetLocation = Paths.get(fileNameWithDir);
+        Files.createFile(targetLocation);
+
+        System.out.println("filename : " + fileName);
+        System.out.println("path : " + targetLocation.toString());
+        return fileNameWithDir;
+    }
+
     public void deleteFile(String fileName) throws IOException {
         Path filePath = Paths.get(FILE_DIR + "/" + fileName);
         Files.delete(filePath);
@@ -49,11 +67,11 @@ public class FileStorageService {
         if(resource.exists()) {
             return resource;
         }
-        filePath = Paths.get(FILE_DIR + "/" + "default_image.png");
+        /*filePath = Paths.get(FILE_DIR + "/" + "default_image.png");
         resource = new UrlResource(filePath.toUri());
         if(resource.exists()) {
             return resource;
-        }
+        }*/
 
         throw new Exception("fichier introuvable");
     }

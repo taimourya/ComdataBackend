@@ -78,14 +78,40 @@ public class UserController implements IUserController {
 
     @Override
     public ResponseEntity<Resource> getImage(String imageName, HttpServletRequest request) throws Exception {
-        // Load file as Resource
+        if(!imageName.endsWith(".png")
+                && !imageName.endsWith(".jpg")
+                && !imageName.endsWith(".jpeg")
+                && !imageName.endsWith(".bmp")
+        ) {
+            throw new Exception("not supported");
+        }
+
         Resource resource = fileStorageService.loadFileAsResource(imageName);
 
-        // Try to determine file's content type
         String contentType = null;
         contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
 
-        // Fallback to the default content type if type could not be determined
+        if(contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
+
+    @Override
+    public ResponseEntity<Resource> getFileExcel(String fileName, HttpServletRequest request) throws Exception {
+        if(!fileName.endsWith(".xlsx")) {
+            throw new Exception("not supported");
+        }
+
+        Resource resource = fileStorageService.loadFileAsResource(fileName);
+
+        String contentType = null;
+        contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+
         if(contentType == null) {
             contentType = "application/octet-stream";
         }

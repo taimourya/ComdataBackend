@@ -28,4 +28,8 @@ public interface IUserController {
 
     @GetMapping("/image/{imageName:.+}") //autoriser par tout les utilisateurs (anonyme ou authentifier)
     ResponseEntity<Resource> getImage(@PathVariable String imageName, HttpServletRequest request) throws Exception;
+
+    @GetMapping("/file/{fileName:.+}") //autoriser par tout les utilisateurs (anonyme ou authentifier)
+    ResponseEntity<Resource> getFileExcel(@PathVariable String fileName, HttpServletRequest request) throws Exception;
+
 }

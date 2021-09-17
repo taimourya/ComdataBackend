@@ -23,9 +23,6 @@ public class ComdataPointageApplication implements CommandLineRunner {
     @Autowired
     private IDataInitialiser dataInitialiser;
 
-    @Autowired private ISessionService sessionService;
-    @Autowired private IGetterIdService getterIdService;
-    @Autowired private PauseRepository pauseRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(ComdataPointageApplication.class, args);

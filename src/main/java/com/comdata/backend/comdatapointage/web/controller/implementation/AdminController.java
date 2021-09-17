@@ -1,20 +1,32 @@
 package com.comdata.backend.comdatapointage.web.controller.implementation;
 
-import ch.qos.logback.core.joran.action.IADataForComplexProperty;
 import com.comdata.backend.comdatapointage.dto.*;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
+import com.comdata.backend.comdatapointage.request.TypeRequest;
 import com.comdata.backend.comdatapointage.request.UserRequest;
-import com.comdata.backend.comdatapointage.service.interfaces.IActiviterService;
-import com.comdata.backend.comdatapointage.service.interfaces.IStatistiqueService;
-import com.comdata.backend.comdatapointage.service.interfaces.ITempsService;
-import com.comdata.backend.comdatapointage.service.interfaces.IUserService;
+import com.comdata.backend.comdatapointage.service.FileStorageService;
+import com.comdata.backend.comdatapointage.service.interfaces.*;
 import com.comdata.backend.comdatapointage.web.controller.interfaces.IAdminController;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Scanner;
 
 @RestController
 public class AdminController implements IAdminController {
@@ -23,7 +35,9 @@ public class AdminController implements IAdminController {
     @Autowired private IActiviterService activiterService;
     @Autowired private ITempsService tempsService;
     @Autowired private IStatistiqueService statistiqueService;
-
+    @Autowired private ITypePauseService typePauseService;
+    @Autowired private IExcelService excelService;
+    @Autowired private FileStorageService fileStorageService;
 
     @Override
     public PageDto<UserDto> getUsers(String mc, String typeUser, String filterEtatCmpt,
@@ -110,6 +124,27 @@ public class AdminController implements IAdminController {
     }
 
     @Override
+    public PageDto<TypeDto> getTypes(String mc, int page, int size) {
+        return typePauseService.consulterTypes(mc, page, size);
+    }
+
+    @Override
+    public TypeDto addType(TypeRequest typeRequest) {
+        System.out.println("type : " + typeRequest.getLibelle());
+        return typePauseService.addType(typeRequest);
+    }
+
+    @Override
+    public TypeDto editType(Integer id, TypeRequest typeRequest) throws Exception {
+        return typePauseService.editType(id, typeRequest);
+    }
+
+    @Override
+    public void deleteType(Integer id) throws Exception {
+        typePauseService.deleteType(id);
+    }
+
+    @Override
     public StatsCollaborateurDto getStatColl(String matricule, String paramTime, Date dateDebut) throws Exception {
         return statistiqueService.consulterStatistiqueCollaborateur(matricule, paramTime, dateDebut);
     }
@@ -137,6 +172,65 @@ public class AdminController implements IAdminController {
             to = new Date();
         }
         return statistiqueService.consulterStatsPieByActivite(id, from, to);
+    }
+
+
+    @Override
+    public void importerExcel(MultipartFile file) throws IOException {
+        excelService.importExcel(file);
+    }
+
+    @Override
+    public void importerFilesExcel(MultipartFile fileActivites, MultipartFile fileUsers, MultipartFile fileTypes, MultipartFile fileTemps) throws Exception {
+        if(fileActivites != null)
+            excelService.importActivites(fileActivites);
+        if(fileUsers != null)
+            excelService.importUsers(fileUsers);
+        if(fileTypes != null)
+            excelService.importTypes(fileTypes);
+        if(fileTemps != null)
+            excelService.importTemps(fileTemps);
+    }
+
+
+    @Override
+    public String downloadActivitesExcel(HttpServletRequest request) throws Exception {
+        String fileName = excelService.exportActivites();
+
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/user/file/")
+                .path(fileName)
+                .toUriString();
+    }
+
+    @Override
+    public String downloadUsersExcel(HttpServletRequest request) throws Exception {
+        String fileName = excelService.exportUsers();
+
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/user/file/")
+                .path(fileName)
+                .toUriString();
+    }
+
+    @Override
+    public String downloadTypesExcel(HttpServletRequest request) throws Exception {
+        String fileName = excelService.exportTypes();
+
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/user/file/")
+                .path(fileName)
+                .toUriString();
+    }
+
+    @Override
+    public String downloadTempsExcel(HttpServletRequest request) throws Exception {
+        String fileName = excelService.exportTemps();
+
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/user/file/")
+                .path(fileName)
+                .toUriString();
     }
 
 }

@@ -14,4 +14,6 @@ public interface TypePauseRepository extends JpaRepository<TypePause, Integer> {
 
     Page<TypePause> findByLibelleContains(String mc, Pageable pageable);
 
+    TypePause findByLibelle(String libelle);
+
 }

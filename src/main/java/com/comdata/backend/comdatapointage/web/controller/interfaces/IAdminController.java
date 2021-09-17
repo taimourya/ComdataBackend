@@ -2,10 +2,16 @@ package com.comdata.backend.comdatapointage.web.controller.interfaces;
 
 import com.comdata.backend.comdatapointage.dto.*;
 import com.comdata.backend.comdatapointage.request.ActiviterRequest;
+import com.comdata.backend.comdatapointage.request.TypeRequest;
 import com.comdata.backend.comdatapointage.request.UserRequest;
+import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
 
 @RequestMapping("/admin")
@@ -62,6 +68,22 @@ public interface IAdminController {
     @GetMapping("collaborateur/temps")
     CollaborateurAllTempsDto getAllTempsCollaborateur(@RequestParam String matricule) throws Exception;
 
+    @GetMapping("types")
+    PageDto<TypeDto> getTypes(
+            @RequestParam(required = false, defaultValue = "") String mc,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    );
+
+    @PostMapping("type")
+    TypeDto addType(@RequestBody TypeRequest typeRequest);
+
+    @PutMapping("type")
+    TypeDto editType(Integer id, @RequestBody TypeRequest typeRequest) throws Exception;
+
+    @DeleteMapping("type")
+    void deleteType(Integer id) throws Exception;
+
     @GetMapping("collaborateur/stats2")
     StatsCollaborateurDto getStatColl(String matricule, String paramTime, @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateDebut) throws Exception;
 
@@ -87,4 +109,28 @@ public interface IAdminController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) Date to
     ) throws Exception;
+
+
+    @PostMapping("/import/excelex")
+    void importerExcel(@RequestParam("file") MultipartFile file) throws IOException;
+
+    @PostMapping("/import/excel")
+    void importerFilesExcel(@RequestParam(value = "fileActivites", required = false) MultipartFile fileActivites,
+                            @RequestParam(value = "fileUsers", required = false) MultipartFile fileUsers,
+                            @RequestParam(value = "fileTypes", required = false) MultipartFile fileTypes,
+                            @RequestParam(value = "fileTemps", required = false) MultipartFile fileTemps) throws Exception;
+
+
+    @GetMapping("/download/activites/excel")
+    String downloadActivitesExcel(HttpServletRequest request) throws Exception;
+
+    @GetMapping("/download/users/excel")
+    String downloadUsersExcel(HttpServletRequest request) throws Exception;
+
+    @GetMapping("/download/types/excel")
+    String downloadTypesExcel(HttpServletRequest request) throws Exception;
+
+    @GetMapping("/download/temps/excel")
+    String downloadTempsExcel(HttpServletRequest request) throws Exception;
+
 }
