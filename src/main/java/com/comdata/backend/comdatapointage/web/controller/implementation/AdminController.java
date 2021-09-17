@@ -176,11 +176,6 @@ public class AdminController implements IAdminController {
 
 
     @Override
-    public void importerExcel(MultipartFile file) throws IOException {
-        excelService.importExcel(file);
-    }
-
-    @Override
     public void importerFilesExcel(MultipartFile fileActivites, MultipartFile fileUsers, MultipartFile fileTypes, MultipartFile fileTemps) throws Exception {
         if(fileActivites != null)
             excelService.importActivites(fileActivites);

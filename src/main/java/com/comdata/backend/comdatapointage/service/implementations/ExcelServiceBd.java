@@ -38,96 +38,12 @@ public class ExcelServiceBd implements IExcelService {
 
     @Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired private IGetterIdService getterIdService;
-    @Autowired private IActiviterService activiterService;
-    @Autowired private IUserService userService;
     @Autowired private ActiviterRepository activiterRepository;
     @Autowired private ParametrageRepository parametrageRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private TypePauseRepository typePauseRepository;
     @Autowired private TempsRepository tempsRepository;
     @Autowired private FileStorageService fileStorageService;
-
-    @Override
-    public void importExcel(MultipartFile file) throws IOException {
-
-        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-        XSSFSheet worksheet = workbook.getSheetAt(0);
-
-        int currectData = 0;
-
-        for(int i=0; i<=worksheet.getPhysicalNumberOfRows() ;i++) {
-
-            XSSFRow row = worksheet.getRow(i);
-            if(row != null && row.getCell(0) != null) {
-                if(row.getCell(0).getStringCellValue().equalsIgnoreCase("activiter")) {
-                    System.out.println("start activiter");
-                    currectData = 1;
-                }
-                else if(row.getCell(0).getStringCellValue().equalsIgnoreCase("users")) {
-                    System.out.println("start users");
-                    currectData = 2;
-                }
-                else if(row.getCell(0).getStringCellValue().equalsIgnoreCase("pauses")) {
-                    System.out.println("start users");
-                    currectData = 3;
-                }
-            }
-
-            switch (currectData) {
-                case 1:
-                    if(!row.getCell(0).getStringCellValue().equalsIgnoreCase("nom") && !row.getCell(0).getStringCellValue().equalsIgnoreCase("Activiter")) {
-                        ActiviterRequest activiterRequest = new ActiviterRequest();
-                        if(getterIdService.getActiviter(row.getCell(0).getStringCellValue()) == null) {
-                            activiterRequest.setName(row.getCell(0).getStringCellValue());
-                            activiterRequest.setTinactiviteMs(((int)row.getCell(1).getNumericCellValue())*1000);//
-                            activiterRequest.setTfermetureSessionMs(((int)row.getCell(2).getNumericCellValue())*1000);
-                            activiterService.addActiviter(activiterRequest);
-                        }
-                    }
-                    break;
-                case 2:
-                    if(!row.getCell(0).getStringCellValue().equalsIgnoreCase("firstname") && !row.getCell(0).getStringCellValue().equalsIgnoreCase("Users")) {
-                        UserRequest userRequest = new UserRequest();
-                        userRequest.setFirstname(row.getCell(0).getStringCellValue());
-                        userRequest.setLastname(row.getCell(1).getStringCellValue());
-                        userRequest.setEmail(row.getCell(2).getStringCellValue());
-                        userRequest.setPhone(row.getCell(3).getStringCellValue());
-                        userRequest.setCin(row.getCell(4).getStringCellValue());
-                        userRequest.setAdresse(row.getCell(5).getStringCellValue());
-                        userRequest.setDate_naissance(row.getCell(6).getDateCellValue());
-                        userRequest.setType(row.getCell(7).getStringCellValue());
-                        if(!userRequest.getType().equals("admin")) {
-                            Activiter a = getterIdService.getActiviter(row.getCell(8).getStringCellValue());
-                            if(a != null) {
-                                userRequest.setActiviter_id(a.getId());
-                            }
-                            else {
-                                ActiviterRequest activiterRequest = new ActiviterRequest();
-                                activiterRequest.setName(row.getCell(8).getStringCellValue());
-                                activiterRequest.setTinactiviteMs(5000);
-                                activiterRequest.setTfermetureSessionMs(5000);
-                                ActiviterDto activiterDto = activiterService.addActiviter(activiterRequest);
-                                userRequest.setActiviter_id(activiterDto.getId());
-                            }
-                        }
-                        userRequest.setPasswd("123");
-                        userRequest.setConfirmPasswd("123");
-                        try {
-                            userService.addUser(userRequest);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-                case 3:
-                    
-                    break;
-                default:
-
-                    break;
-            }
-        }
-    }
 
     @Override
     public String exportActivites() {

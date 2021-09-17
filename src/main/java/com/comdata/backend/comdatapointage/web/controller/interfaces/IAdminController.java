@@ -111,8 +111,6 @@ public interface IAdminController {
     ) throws Exception;
 
 
-    @PostMapping("/import/excelex")
-    void importerExcel(@RequestParam("file") MultipartFile file) throws IOException;
 
     @PostMapping("/import/excel")
     void importerFilesExcel(@RequestParam(value = "fileActivites", required = false) MultipartFile fileActivites,

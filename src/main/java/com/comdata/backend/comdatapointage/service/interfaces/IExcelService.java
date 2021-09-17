@@ -7,8 +7,6 @@ import java.io.IOException;
 public interface IExcelService {
 
 
-    void importExcel(MultipartFile file) throws IOException;
-
     String exportActivites();
     String exportUsers();
     String exportTypes();
