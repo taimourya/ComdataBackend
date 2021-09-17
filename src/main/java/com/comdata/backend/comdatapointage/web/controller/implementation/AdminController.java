@@ -209,7 +209,7 @@ public class AdminController implements IAdminController {
         String fileName = excelService.exportActivites();
 
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/user/file/")
+                .path("/admin/file/")
                 .path(fileName)
                 .toUriString();
     }
@@ -219,7 +219,7 @@ public class AdminController implements IAdminController {
         String fileName = excelService.exportUsers();
 
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/user/file/")
+                .path("/admin/file/")
                 .path(fileName)
                 .toUriString();
     }
@@ -229,7 +229,7 @@ public class AdminController implements IAdminController {
         String fileName = excelService.exportTypes();
 
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/user/file/")
+                .path("/admin/file/")
                 .path(fileName)
                 .toUriString();
     }
@@ -239,9 +239,29 @@ public class AdminController implements IAdminController {
         String fileName = excelService.exportTemps();
 
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/user/file/")
+                .path("/admin/file/")
                 .path(fileName)
                 .toUriString();
     }
 
+    @Override
+    public ResponseEntity<Resource> getFileExcel(String fileName, HttpServletRequest request) throws Exception {
+        if(!fileName.endsWith(".xlsx")) {
+            throw new Exception("not supported");
+        }
+
+        Resource resource = fileStorageService.loadFileAsResource(fileName);
+
+        String contentType = null;
+        contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+
+        if(contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
 }

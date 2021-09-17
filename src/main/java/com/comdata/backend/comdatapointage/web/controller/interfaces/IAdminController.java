@@ -131,4 +131,6 @@ public interface IAdminController {
     @GetMapping("/download/temps/excel")
     String downloadTempsExcel(HttpServletRequest request) throws Exception;
 
+    @GetMapping("/file/{fileName:.+}")
+    ResponseEntity<Resource> getFileExcel(@PathVariable String fileName, HttpServletRequest request) throws Exception;
 }
