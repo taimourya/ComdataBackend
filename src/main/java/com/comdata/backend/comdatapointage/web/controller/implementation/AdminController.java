@@ -177,6 +177,12 @@ public class AdminController implements IAdminController {
 
     @Override
     public void importerFilesExcel(MultipartFile fileActivites, MultipartFile fileUsers, MultipartFile fileTypes, MultipartFile fileTemps) throws Exception {
+        if(!fileActivites.getOriginalFilename().endsWith(".xlsx")
+        || !fileUsers.getOriginalFilename().endsWith(".xlsx")
+        || !fileTypes.getOriginalFilename().endsWith(".xlsx")
+        || !fileTemps.getOriginalFilename().endsWith(".xlsx")) {
+            throw new Exception("not supported");
+        }
         if(fileActivites != null)
             excelService.importActivites(fileActivites);
         if(fileUsers != null)
