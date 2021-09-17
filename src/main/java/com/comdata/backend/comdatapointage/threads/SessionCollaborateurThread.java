@@ -147,7 +147,7 @@ public class SessionCollaborateurThread extends Thread{
 
         if(cpt == 0) {
             if(currentState == STATE.INACTIF) {
-                this.startActiviter();
+                this.endInactiviter();
             }
         }
         else if(cpt * 1000 >= parametrage.getTInactiviteMs()) {
