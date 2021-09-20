@@ -167,12 +167,13 @@ public class AdminController implements IAdminController {
     }
 
     @Override
-    public StatsPieByActiviteDto getStatPieActiviter(Integer id, Date from, Date to) throws Exception {
+    public StatsPieByActiviteDto getStatByCollPieActiviter(Integer id, Date from, Date to) throws Exception {
         if(to == null) {
             to = new Date();
         }
         return statistiqueService.consulterStatsPieByActivite(id, from, to);
     }
+
 
 
     @Override

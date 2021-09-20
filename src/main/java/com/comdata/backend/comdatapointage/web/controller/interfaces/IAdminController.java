@@ -104,7 +104,7 @@ public interface IAdminController {
     ) throws Exception;
 
     @GetMapping("activiter/stats/pie")
-    StatsPieByActiviteDto getStatPieActiviter(
+    StatsPieByActiviteDto getStatByCollPieActiviter(
             Integer id,
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) Date to

@@ -26,14 +26,14 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        System.out.println("msg = " + message.getPayload());
+        //System.out.println("msg = " + message.getPayload());
         String[] splited = message.getPayload().split(":");
         if(splited.length < 2) {
             session.sendMessage(new TextMessage("operation impossible"));
             return;
         }
         String operation = splited[0].trim();
-        System.out.println(operation);
+        //System.out.println(operation);
         if(operation.equals("start")) {
             startSession(session, splited[1].trim());
         }
@@ -70,7 +70,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
                 if(params.length >= 2) {
                     if(params[1].startsWith("cpt")) {
                         Integer cpt = Integer.parseInt(params[1].split("=")[1].trim());
-                        System.out.println("cpt: " + cpt);
+                        //System.out.println("cpt: " + cpt);
                         SessionCollaborateurThread s = SessionCollaborateurThread.findSession(session);
                         s.startInactiviterAfterCpt(cpt);
                     }

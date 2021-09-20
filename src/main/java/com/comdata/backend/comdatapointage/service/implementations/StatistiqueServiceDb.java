@@ -274,12 +274,38 @@ public class StatistiqueServiceDb implements IStatistiqueService {
         statsActivite.setActiviter_id(id);
         statsActivite.setActiviter_name(activiter.getNom());
 
+        double totalActivites = 0;
+        double totalPauses = 0;
+        double totalInactivites = 0;
         for(Collaborateur c : activiter.getCollaborateurs()) {
             statsActivite.getStatsCollaborateurs().add(consulterStatsPieCollaborateur(
-                   c.getMatricule(),
-                   from,
-                   to
+               c.getMatricule(),
+               from,
+               to
             ));
+
+            for(Temps t : actifRepository.findByBetweenDate(c, from, to)) {
+                totalActivites += timeCalculator.difference(t.getHeur_debut(), t.getHeur_fin());
+            }
+            for(Temps t : pauseRepository.findByBetweenDate(c, from, to)) {
+                totalPauses += timeCalculator.difference(t.getHeur_debut(), t.getHeur_fin());
+            }
+            for(Temps t : inactifRepository.findByBetweenDate(c, from, to)) {
+                totalInactivites += timeCalculator.difference(t.getHeur_debut(), t.getHeur_fin());
+            }
+        }
+
+        double total = totalActivites + totalPauses + totalInactivites;
+
+        if(total != 0) {
+            statsActivite.setActivitesPercent((totalActivites * 100) / total);
+            statsActivite.setPausesPercent((totalPauses * 100) / total);
+            statsActivite.setInactivitesPercent((totalInactivites * 100) / total);
+        }
+        else {
+            statsActivite.setActivitesPercent(0);
+            statsActivite.setPausesPercent(0);
+            statsActivite.setInactivitesPercent(0);
         }
 
         return statsActivite;

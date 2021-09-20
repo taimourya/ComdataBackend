@@ -107,11 +107,12 @@ public class SuperviseurController implements ISuperviseurController {
     }
 
     @Override
-    public StatsPieByActiviteDto getStatPieActiviter(Date from, Date to) throws Exception {
+    public StatsPieByActiviteDto getStatPieCollActiviter(Date from, Date to) throws Exception {
         Superviseur superviseur = (Superviseur) getterIdService.getUser(userService.getAuthMatricule());
 
         return statistiqueService.consulterStatsPieByActivite(
                 superviseur.getActiviter().getId(), from, to
         );
     }
+
 }

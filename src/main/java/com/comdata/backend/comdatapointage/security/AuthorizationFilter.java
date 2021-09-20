@@ -43,7 +43,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
 		String jwt = request.getHeader(SecurityConstants.HEADER_STRING);
 
-		System.out.println("token : " + jwt);
+		//System.out.println("token : " + jwt);
 
 		if(jwt == null || !jwt.startsWith(SecurityConstants.TOKEN_PREFIX)) {
 			filterChain.doFilter(request, response);
@@ -59,7 +59,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		roles.forEach(
 				r-> {
-					System.out.println("role : " + r.get("authority"));
+					//System.out.println("role : " + r.get("authority"));
 					authorities.add(new SimpleGrantedAuthority(r.get("authority")));
 				}
 		);

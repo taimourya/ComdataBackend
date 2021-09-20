@@ -14,5 +14,8 @@ import java.util.List;
 public class StatsPieByActiviteDto {
     private Integer activiter_id;
     private String activiter_name;
+    private double activitesPercent;
+    private double pausesPercent;
+    private double inactivitesPercent;
     private List<StatsPieCollaborateurDto> statsCollaborateurs = new ArrayList<>();
 }

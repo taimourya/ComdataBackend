@@ -46,7 +46,7 @@ public interface ISuperviseurController {
     ActiviterDto editParametrageActiviter(@RequestBody ActiviterRequest activiterRequest) throws Exception;
 
     @GetMapping("activiter/stats/pie")
-    StatsPieByActiviteDto getStatPieActiviter(
+    StatsPieByActiviteDto getStatPieCollActiviter(
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam(required = false) Date to
     ) throws Exception;

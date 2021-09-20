@@ -161,12 +161,12 @@ public class SessionCollaborateurThread extends Thread{
 
         boolean fin = false;
         while (!fin) {
-            System.out.println("----------------------------");
+            /*System.out.println("----------------------------");
             System.out.println("current : " + currentState);
             if(currentTemps != null) {
                 System.out.println("pauseIna : " + currentTemps.getId() + " and type is : " + currentTemps.getClass().getSimpleName());
             }
-            System.out.println("----------------------------");
+            System.out.println("----------------------------");*/
             try {
                 Thread.sleep(1000);
 

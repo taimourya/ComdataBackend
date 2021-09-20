@@ -132,34 +132,37 @@ public class UserServiceBd implements IUserService {
         {
             //filterSession =>  all, fermer, actif, inactif, pause
             List<Collaborateur> collaborateurs = new ArrayList<>();
+            int nres = 0;
             if(filterSession.equalsIgnoreCase("actif")) {
                 for (SessionCollaborateurThread session : SessionCollaborateurThread.sessions) {
-                    if(session.isActif())
+                    if((activiter_id == -1 || activiter_id == session.getCollaborateur().getActiviter().getId()) && session.isActif()) {
                         collaborateurs.add(session.getCollaborateur());
+                        nres++;
+                        if(nres >= size)
+                            break;
+                    }
                 }
             }
-            else if(filterEtatCmpt.equalsIgnoreCase("actif"))
+            else if(filterSession.equalsIgnoreCase("inactif"))
             {
-                for (int i = 0; i < size && i < SessionCollaborateurThread.sessions.size(); i++) {
-                    SessionCollaborateurThread session = SessionCollaborateurThread.sessions.get(i);
-                    if(session.isActif())
+                for (SessionCollaborateurThread session : SessionCollaborateurThread.sessions) {
+                    if((activiter_id == -1 || activiter_id == session.getCollaborateur().getActiviter().getId()) && session.isInactif()) {
                         collaborateurs.add(session.getCollaborateur());
+                        nres++;
+                        if(nres >= size)
+                            break;
+                    }
                 }
             }
-            else if(filterEtatCmpt.equalsIgnoreCase("inactif"))
+            else if(filterSession.equalsIgnoreCase("pause"))
             {
-                for (int i = 0; i < size && i < SessionCollaborateurThread.sessions.size(); i++) {
-                    SessionCollaborateurThread session = SessionCollaborateurThread.sessions.get(i);
-                    if(session.isInactif())
+                for (SessionCollaborateurThread session : SessionCollaborateurThread.sessions) {
+                    if((activiter_id == -1 || activiter_id == session.getCollaborateur().getActiviter().getId()) && session.isPause()) {
                         collaborateurs.add(session.getCollaborateur());
-                }
-            }
-            else if(filterEtatCmpt.equalsIgnoreCase("pause"))
-            {
-                for (int i = 0; i < size && i < SessionCollaborateurThread.sessions.size(); i++) {
-                    SessionCollaborateurThread session = SessionCollaborateurThread.sessions.get(i);
-                    if(session.isPause())
-                        collaborateurs.add(session.getCollaborateur());
+                        nres++;
+                        if(nres >= size)
+                            break;
+                    }
                 }
             }
             else if(filterEtatCmpt.equalsIgnoreCase("fermer")) {
