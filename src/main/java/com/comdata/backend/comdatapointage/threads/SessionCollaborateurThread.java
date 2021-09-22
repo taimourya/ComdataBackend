@@ -119,11 +119,11 @@ public class SessionCollaborateurThread extends Thread{
 
     public void endSession() throws Exception {
         if(currentState == STATE.PAUSE)
-            endPause();
+            sessionService.endPause(currentTemps.getId());
         else if(currentState == STATE.INACTIF)
-            endInactiviter();
+            sessionService.endInactiviter(currentTemps.getId());
         else if(currentState == STATE.ACTIF)
-            endActiviter();
+            sessionService.endActiviter(currentTemps.getId());
         this.currentState = STATE.CLOSED;
     }
 

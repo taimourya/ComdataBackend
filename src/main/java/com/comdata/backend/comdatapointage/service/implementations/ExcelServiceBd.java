@@ -217,7 +217,8 @@ public class ExcelServiceBd implements IExcelService {
 
             row.createCell(3).setCellValue(a.getDate().toString());
             row.createCell(4).setCellValue(a.getHeur_debut().toString());
-            row.createCell(5).setCellValue(a.getHeur_fin().toString());
+            if(a.getHeur_fin() != null)
+                row.createCell(5).setCellValue(a.getHeur_fin().toString());
             if(a instanceof Pause) {
 
                 row.createCell(6).setCellValue("pause");
