@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +28,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+
 
 @Service
 public class UserServiceBd implements IUserService {
@@ -38,17 +42,16 @@ public class UserServiceBd implements IUserService {
     @Autowired private SuperviseurRepository superviseurRepository;
     @Autowired private CollaborateurRepository collaborateurRepository;
 
-
     @Override
-    public UserDetails loadUserByUsername(String matricule) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String matricule) throws AuthenticationException {
         Optional<User> optionalUser = userRepository.findById(matricule);
         if(!optionalUser.isPresent())
-            throw new UsernameNotFoundException(matricule);
+            throw new UsernameNotFoundException("username or password incorrect");
 
         User userEntity = optionalUser.get();
 
         if(!userEntity.isActive())
-            throw new UsernameNotFoundException(matricule);
+            throw new DisabledException("utilisateur desactiver");
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 

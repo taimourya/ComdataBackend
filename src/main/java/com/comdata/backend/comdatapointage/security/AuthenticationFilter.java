@@ -5,11 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -42,6 +44,32 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.setStatus(403);
+
+		System.out.println("message :::::: " + failed.getMessage());
+		if(failed.getMessage().equals("Bad credentials")) {
+			response.getWriter().write(
+					"{\"message\": \"incorrect\"}"
+			);
+		}
+		else if(failed.getMessage().equals("utilisateur desactiver")) {
+			response.getWriter().write(
+					"{\"message\": \"disabled\"}"
+			);
+		}
+		else {
+			response.getWriter().write(
+					"{\"message\": \"\"}"
+			);
+		}
+
 	}
 
 	@Override
