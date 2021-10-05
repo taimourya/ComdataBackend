@@ -168,7 +168,7 @@ public class UserServiceBd implements IUserService {
                     }
                 }
             }
-            else if(filterEtatCmpt.equalsIgnoreCase("fermer")) {
+            else if(filterSession.equalsIgnoreCase("fermer")) {
                 List<Collaborateur> allCollaborateurs = collaborateurRepository.findAll();
                 for(int i = 0; i < allCollaborateurs.size() && collaborateurs.size() < size; i++) {
                     if(!SessionCollaborateurThread.containsCollaborateur(allCollaborateurs.get(i))) {
