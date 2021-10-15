@@ -26,7 +26,7 @@ public interface IUserController {
     @PostMapping("/upload/image")
     UserDto uploadFile(@RequestParam("image") MultipartFile image) throws Exception;
 
-    @GetMapping("/image/{imageName:.+}") //autoriser par tout les utilisateurs (anonyme ou authentifier)
+    @GetMapping("/image/{imageName:.+}")
     ResponseEntity<Resource> getImage(@PathVariable String imageName, HttpServletRequest request) throws Exception;
 
 
